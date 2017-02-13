@@ -19,6 +19,7 @@ def main():
 
     s=segmentador(_in)
     s.asigna_metodo(s.fondo_frame_anterior)
+    #s.asigna_metodo(s.fondo_estatico)
     s.procesa()
 
 

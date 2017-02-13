@@ -4,7 +4,8 @@ import argparse
 import math as m
 import cv2
 
-
+#fondo estatico=umbral 250
+#fondo frame anterior=225
 def main():
 
     ap = argparse.ArgumentParser()
@@ -17,7 +18,7 @@ def main():
 
 
     s=segmentador(_in)
-    s.asigna_metodo(s.fondo_estatico)
+    s.asigna_metodo(s.fondo_frame_anterior)
     s.procesa()
 
 

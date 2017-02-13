@@ -5,12 +5,12 @@ class segmentador ():
 
     def __init__(self, video):
 
-        self.umbral=250
+        self.umbral=254
         self.frame_ant=None
         self.fondo=None
         self.acum=None
         self.frente=None
-        self.alpha=0.5
+        self.alpha=0.05
         self.mask=None
         self._in=video
         self.vin=cv2.VideoCapture(self._in)
@@ -26,7 +26,6 @@ class segmentador ():
         return frame
 
     def segmenta(self,frame=None,init=None):
-
         self.metodo(frame,init)
 
     def procesa(self):
@@ -51,10 +50,16 @@ class segmentador ():
             cv2.imshow('resultado',frame)
             cv2.imshow('video', original)
             tecla=cv2.waitKey(15)
-            if tecla != -1:
+
+            if tecla == 1048689:
                 break
+            if tecla == 1048686:
+                self.fondo = self.captura()
+
     def fondo_frame_anterior(self,frame=None,init=None):
 
+        if init is True:
+            self.acum=frame
 
         if init is None:
             self.mask = np.zeros(frame.shape, dtype=bool)
@@ -101,6 +106,7 @@ class segmentador ():
 
         if init is True:
             self.fondo = frame
+            self.acum = frame
             cv2.imshow('Imagen de fondo', frame)
             cv2.waitKey()
             cv2.destroyAllWindows()

@@ -16,13 +16,9 @@ def main():
     _out = args['out']
 
 
-    vin = cv2.VideoCapture(_in)
-    ret, frame = vin.read()
-
-
-    s=segmentador(method,vin)
-    s.segmenta(frame)
-
+    s=segmentador(_in)
+    s.asigna_metodo(s.fondo_estatico)
+    s.procesa()
 
 
 def method (img):

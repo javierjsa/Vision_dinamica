@@ -1,25 +1,75 @@
 import cv2
-
+import numpy as np
+import math as m
 class segmentador ():
 
-    def __init__(self, background_method,video):
+    def __init__(self, video):
 
-        self.method=background_method
-        self.background=None
-        self.foreground=None
+        self.umbral=250
+        self.fondo=None
+        self.frente=None
         self.alpha=None
         self.mask=None
         self._in=video
         self.vin=cv2.VideoCapture(self._in)
+
+    def asigna_metodo(self,metodo):
+
+        self.metodo=metodo
+
 
     def captura(self):
 
         ret, frame = self.vin.read()
         return frame
 
-    def segmenta(self,img):
+    def segmenta(self,frame=None,init=None):
 
-        self.method(img)
+        self.metodo(frame,init)
 
     def procesa(self):
+        
+        self.segmenta(self.captura(),init=True)
+
         while (True):
+            self.segmenta(self.captura())
+            frame=self.captura()
+            original=np.copy(frame)
+            if len(frame.shape)==3:
+                frame[:,:,0]=np.multiply(frame[:,:,0],self.mask)
+                frame[:,:,1] = np.multiply(frame[:, :, 1], self.mask)
+                frame[:,:,2] = np.multiply(frame[:, :, 2], self.mask)
+            else:
+                frame=np.multiply(frame,self.mask)
+
+            cv2.imshow('resultado',frame)
+            cv2.imshow('video', original)
+            cv2
+            cv2.waitKey()
+
+    def fondo_estatico(self,frame=None,init=None):
+
+        if init is True:
+            self.fondo=frame
+            cv2.imshow('Imagen de fondo',frame)
+            cv2.waitKey()
+            cv2.destroyAllWindows()
+        if init is None:
+            self.mask = np.zeros(frame.shape, dtype=bool)
+
+            if len(frame.shape)==3:
+                index=2
+            else:
+                index=0
+
+            while index>0:
+                tmp=self.mask[:,:,index]
+                aux=np.subtract(frame[:,:,index],self.fondo[:,:,index])
+                tmp[np.absolute(np.subtract(frame[:,:,index],self.fondo[:,:,index]))>self.umbral]=True
+                self.mask[:,:,index]=tmp
+                index=index-1
+
+            if len(self.mask.shape)==3:
+                tmp=np.logical_or(self.mask[:,:,0],self.mask[:,:,1])
+                self.mask=np.logical_or(tmp,self.mask[:,:,2])
+

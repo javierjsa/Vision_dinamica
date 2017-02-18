@@ -51,15 +51,19 @@ class segmentador ():
                 self.frame[:,:,2] = np.multiply(self.frame[:, :, 2], self.mask)
             else:
                 self.frame=np.multiply(self.frame,self.mask)
-                
+
             aux=np.copy(self.acum)
             self.acum=(self.alpha*self.frame)+(1-self.alpha)*self.acum
+
+            #Los pixeles se actualizan y luego se recupera el valor de
+            #los que son primer plano
 
             a=[self.acum[:,:,0],self.acum[:,:,1],self.acum[:,:,2]]
             b=[aux[:,:,0],aux[:,:,1],aux[:,:,2]]
 
             for ac,au in zip(a,b):
                 ac[self.mask is True]=au[self.mask is True]
+
             cv2.imshow('resultado',self.frame)
             cv2.imshow('video', original)
             tecla=cv2.waitKey(15)

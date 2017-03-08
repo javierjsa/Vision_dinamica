@@ -13,10 +13,22 @@
 class LKanade: public Calculaflujos {
 
 private:
-	int constante;
+	int vecindad;
+	Mat Ixi;
+	Mat Iyi;
+	Mat Ix2i;
+	Mat Iy2i;
+	Mat Iti;
+	Mat IxiIti;
+	Mat IyiIti;
+	Mat Ix2iIy2i;
+
 
 public:
-	LKanade(int a,cv::Mat* img_t, cv::Mat* img_t1);
+	LKanade(int vecindad,cv::Mat* img_t, cv::Mat* img_t1);
+
+	void Calcula_UV();
+
 	virtual ~LKanade();
 };
 

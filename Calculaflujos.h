@@ -38,7 +38,7 @@ protected:
 	Mat  Iy;   // Derivada Y
 	Mat  I2t;  // Suavizado t
 	Mat  I2t1; // Suavizado t+1
-	Mat  I2; // Suavizado
+	Mat  It; // Suavizado
 
 public:
 

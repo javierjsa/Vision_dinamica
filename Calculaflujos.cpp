@@ -42,7 +42,7 @@ Calculaflujos::Calculaflujos(cv::Mat* img_t, cv::Mat* img_t1) {
 		this->Iy= Mat::zeros(r,c,CV_32F);
 		this->I2t= Mat::zeros(r,c,CV_32F);
 		this->I2t1= Mat::zeros(r,c,CV_32F);
-		this->I2= Mat::zeros(r,c,CV_32F);
+		this->It= Mat::zeros(r,c,CV_32F);
 
 	}
 
@@ -98,7 +98,7 @@ void Calculaflujos::Calcula_gradiente(){
 		GaussianBlur(*(this->img_t),this->I2t,Size(kernel_size,kernel_size),0,0,BORDER_DEFAULT);
 		GaussianBlur(*(this->img_t1),this->I2t1,Size(kernel_size,kernel_size),0,0,BORDER_DEFAULT);
 
-		this->I2=this->I2t1-this->I2t;
+		this->It=this->I2t1-this->I2t;
 
 		/*namedWindow( "I2", WINDOW_AUTOSIZE );
 		imshow( "I2", this->I2);

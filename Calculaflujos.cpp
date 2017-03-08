@@ -29,16 +29,82 @@ using namespace std;
 
 Calculaflujos::Calculaflujos(cv::Mat* img_t, cv::Mat* img_t1) {
 
+	    this->img_t=img_t;
+		this->img_t1=img_t1;
 		int c=(this->img_t)->cols;
 	    int r=(this->img_t)->rows;
-		this->img_t=img_t;
-		this->img_t1=img_t1;
-		this->Ixt= Mat::zeros(100,100,CV_32F);
+
+		this->Ixt= Mat::zeros(r,c,CV_32F);
+		this->Iyt= Mat::zeros(r,c,CV_32F);
+		this->Ixt1= Mat::zeros(r,c,CV_32F);
+		this->Iyt1= Mat::zeros(r,c,CV_32F);
+		this->Ix= Mat::zeros(r,c,CV_32F);
+		this->Iy= Mat::zeros(r,c,CV_32F);
+		this->I2t= Mat::zeros(r,c,CV_32F);
+		this->I2t1= Mat::zeros(r,c,CV_32F);
+		this->I2= Mat::zeros(r,c,CV_32F);
+
 	}
 
 void Calculaflujos::Calcula_gradiente(){
-		int a=1;
-		cout<<"holita\n";
+
+		int kernel_size = 3;
+		//int scale = 1;
+		//int delta = 0;
+
+		Sobel( *(this->img_t), this->Ixt, CV_32F, 1, 0, kernel_size);
+		Sobel( *(this->img_t), this->Iyt, CV_32F, 0, 1, kernel_size);
+
+		this->Ixt=abs(this->Ixt);
+		this->Iyt=abs(this->Iyt);
+
+
+		/*namedWindow( "Ixt", WINDOW_AUTOSIZE );
+		imshow( "Ixt", this->Ixt );
+		waitKey(0);
+		destroyAllWindows();*/
+
+		Sobel( *(this->img_t1), this->Ixt1, CV_32F, 1, 0, kernel_size);
+		Sobel( *(this->img_t1), this->Iyt1, CV_32F, 0, 1, kernel_size);
+
+		this->Ixt1=abs(this->Ixt1);
+		this->Iyt1=abs(this->Iyt1);
+
+		/*namedWindow( "Ixt1", WINDOW_AUTOSIZE );
+		imshow( "Ixt1", this->Ixt1 );
+		waitKey(0);
+		destroyAllWindows();*/
+
+		this->Ix=(this->Ixt+Ixt1)/2;
+		this->Iy=(this->Iyt+Iyt1)/2;
+
+
+		/*namedWindow( "Ixt", WINDOW_AUTOSIZE );
+		imshow( "Ix", this->Ix );
+		waitKey(0);
+		destroyAllWindows();*/
+
+
+
+		/*namedWindow( "Iy", WINDOW_AUTOSIZE );
+		imshow( "Iy", this->Iy);
+		waitKey(0);
+		destroyAllWindows();*/
+
+
+
+		//GaussianBlur(InputArray src, OutputArray dst, Size ksize, double sigmaX, double sigmaY=0, int borderType=BORDER_DEFAULT );
+
+		GaussianBlur(*(this->img_t),this->I2t,Size(kernel_size,kernel_size),0,0,BORDER_DEFAULT);
+		GaussianBlur(*(this->img_t1),this->I2t1,Size(kernel_size,kernel_size),0,0,BORDER_DEFAULT);
+
+		this->I2=this->I2t1-this->I2t;
+
+		/*namedWindow( "I2", WINDOW_AUTOSIZE );
+		imshow( "I2", this->I2);
+		waitKey(0);
+		destroyAllWindows();*/
+
 
 	}
 

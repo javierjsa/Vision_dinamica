@@ -36,13 +36,13 @@ int main(int argc, char** argv) {
 	Mat img_a;
 	Mat img_b;
 
-	img_a = imread(argv[1], IMREAD_COLOR);
-	img_b = imread(argv[1], CV_LOAD_IMAGE_COLOR);
+	img_a = imread(argv[1], CV_LOAD_IMAGE_COLOR);
+	img_b = imread(argv[2], CV_LOAD_IMAGE_COLOR);
 	Calculaflujos a = Calculaflujos(&img_a,&img_b);
-	a.Calcula_gradiente();
+	//a.Calcula_gradiente();
 
 	LKanade b = LKanade(1,&img_a,&img_b);
-	b.Calcula_gradiente();
+	//b.Calcula_gradiente();
 
 	HShunck c =HShunck(1,&img_a,&img_b);
 	c.Calcula_gradiente();

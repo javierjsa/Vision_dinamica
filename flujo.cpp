@@ -38,20 +38,29 @@ int main(int argc, char** argv) {
 
 	img_a = imread(argv[1], CV_LOAD_IMAGE_COLOR);
 	img_b = imread(argv[2], CV_LOAD_IMAGE_COLOR);
-	Calculaflujos a = Calculaflujos(&img_a,&img_b);
+
+	if((! img_a.data ) || (! img_b.data ))
+		    {
+		        cout <<  "Could not open or find the image" << std::endl ;
+		        return -1;
+		    }
+
+
+
+	//cvtColor(InputArray src, OutputArray dst, int code, int dstCn=0
+
+	cvtColor(img_a,img_a,CV_RGB2GRAY,0);
+	cvtColor(img_b,img_b,CV_RGB2GRAY,0);
+
+	//Calculaflujos a = Calculaflujos(&img_a,&img_b);
 	//a.Calcula_gradiente();
 
 	LKanade b = LKanade(1,&img_a,&img_b);
-	//b.Calcula_gradiente();
+	b.Calcula_gradiente();
+	b.Calcula_UV();
+	//HShunck c =HShunck(1,&img_a,&img_b);
+	//c.Calcula_gradiente();
 
-	HShunck c =HShunck(1,&img_a,&img_b);
-	c.Calcula_gradiente();
-
-	if((! img_a.data ) || (! img_a.data ))
-	    {
-	        cout <<  "Could not open or find the image" << std::endl ;
-	        return -1;
-	    }
 
 
 	return 0;

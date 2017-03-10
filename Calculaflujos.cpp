@@ -34,10 +34,10 @@ Calculaflujos::Calculaflujos(cv::Mat* img_t, cv::Mat* img_t1) {
 		int c=(this->img_t)->cols;
 	    int r=(this->img_t)->rows;
 
-		this->Ixt= Mat::zeros(r,c,CV_32F);
-		this->Iyt= Mat::zeros(r,c,CV_32F);
-		this->Ixt1= Mat::zeros(r,c,CV_32F);
-		this->Iyt1= Mat::zeros(r,c,CV_32F);
+		this->Ixt= Mat::zeros(r,c,CV_32F); //Gradiente X de t
+		this->Iyt= Mat::zeros(r,c,CV_32F); // Gradiente Y de t
+		this->Ixt1= Mat::zeros(r,c,CV_32F); // Gradiente x de t1
+		this->Iyt1= Mat::zeros(r,c,CV_32F); // Gradiente y de t1
 		this->Ix= Mat::zeros(r,c,CV_32F);
 		this->Iy= Mat::zeros(r,c,CV_32F);
 		this->I2t= Mat::zeros(r,c,CV_32F);
@@ -48,7 +48,7 @@ Calculaflujos::Calculaflujos(cv::Mat* img_t, cv::Mat* img_t1) {
 
 void Calculaflujos::Calcula_gradiente(){
 
-		int kernel_size = 3;
+		int kernel_size = 11;
 		//int scale = 1;
 		//int delta = 0;
 
@@ -58,47 +58,51 @@ void Calculaflujos::Calcula_gradiente(){
 		this->Ixt=abs(this->Ixt);
 		this->Iyt=abs(this->Iyt);
 
-
-		/*namedWindow( "Ixt", WINDOW_AUTOSIZE );
-		imshow( "Ixt", this->Ixt );
-		waitKey(0);
-		destroyAllWindows();*/
-
 		Sobel( *(this->img_t1), this->Ixt1, CV_32F, 1, 0, kernel_size);
 		Sobel( *(this->img_t1), this->Iyt1, CV_32F, 0, 1, kernel_size);
 
 		this->Ixt1=abs(this->Ixt1);
 		this->Iyt1=abs(this->Iyt1);
 
-		/*namedWindow( "Ixt1", WINDOW_AUTOSIZE );
-		imshow( "Ixt1", this->Ixt1 );
-		waitKey(0);
-		destroyAllWindows();*/
 
 		this->Ix=(this->Ixt+Ixt1)/2;
 		this->Iy=(this->Iyt+Iyt1)/2;
 
+		GaussianBlur(*(this->img_t),this->I2t,Size(kernel_size,kernel_size),0,0,BORDER_DEFAULT);
+		GaussianBlur(*(this->img_t1),this->I2t1,Size(kernel_size,kernel_size),0,0,BORDER_DEFAULT);
+
+		this->It=(this->I2t1)-(this->I2t);
+
 
 		/*namedWindow( "Ixt", WINDOW_AUTOSIZE );
+		imshow( "Ixt", this->Ixt );
+		waitKey(0);
+		destroyAllWindows();
+
+		namedWindow( "Ixt1", WINDOW_AUTOSIZE );
+		imshow( "Ixt1", this->Ixt1 );
+		waitKey(0);
+		destroyAllWindows();
+
+
+
+		namedWindow( "Ix", WINDOW_AUTOSIZE );
 		imshow( "Ix", this->Ix );
 		waitKey(0);
-		destroyAllWindows();*/
+		destroyAllWindows();
 
 
 
-		/*namedWindow( "Iy", WINDOW_AUTOSIZE );
+		namedWindow( "Iy", WINDOW_AUTOSIZE );
 		imshow( "Iy", this->Iy);
 		waitKey(0);
-		destroyAllWindows();*/
+		destroyAllWindows();
 
 
 
 		//GaussianBlur(InputArray src, OutputArray dst, Size ksize, double sigmaX, double sigmaY=0, int borderType=BORDER_DEFAULT );
 
-		GaussianBlur(*(this->img_t),this->I2t,Size(kernel_size,kernel_size),0,0,BORDER_DEFAULT);
-		GaussianBlur(*(this->img_t1),this->I2t1,Size(kernel_size,kernel_size),0,0,BORDER_DEFAULT);
 
-		this->It=this->I2t1-this->I2t;
 
 		/*namedWindow( "I2", WINDOW_AUTOSIZE );
 		imshow( "I2", this->I2);
@@ -107,6 +111,24 @@ void Calculaflujos::Calcula_gradiente(){
 
 
 	}
+
+
+cv::Mat* Calculaflujos::CalculaGradiente(cv::Mat* img_t){
+
+	cv::Point anchor = Point( -1, -1 );
+	int delta = 0;
+	int ddepth = -1;
+
+	int kernel_size = 3;
+
+	float data[3] = {-1,0,1};
+	Mat A = Mat(1, 3, CV_32FC1, &data);
+
+	return &A;
+
+
+
+}
 
 Calculaflujos:: ~Calculaflujos() {
 	int a=1;

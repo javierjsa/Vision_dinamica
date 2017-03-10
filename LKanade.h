@@ -22,6 +22,9 @@ private:
 	Mat IxiIti;
 	Mat IyiIti;
 	Mat Ix2iIy2i;
+	Mat IyiIxi;
+	Mat U;
+	Mat V;
 
 
 public:

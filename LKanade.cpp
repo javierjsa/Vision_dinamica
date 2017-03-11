@@ -106,14 +106,23 @@ cv::Mat* LKanade::get_V(){
 void LKanade::pintaVector(cv::Mat* img_a){
 	int c=(img_a)->cols;
 	int r=(img_a)->rows;
-	//#pragma omp parallel for simd collapse (2)
+	#pragma omp parallel for simd collapse (2)
 	for (int i=3;i<=(r-3);i++){
 		for (int j=3;j<=(c-3);j++){
 			CvPoint p = cvPoint(j, i);
 			double modulo = sqrt(this->U.at<float>(i,j) + this->V.at<float>(i,j));
-			if (modulo>=1){
-				cerr<<modulo<<",";
-				CvPoint p2 = cvPoint(p.x + 3, p.y + 3);
+			if (modulo>0){
+				int x2,y2;
+				if(this->U.at<float>(i,j)<0)
+					x2=-3;
+				if(this->U.at<float>(i,j)>0)
+					x2=3;
+				if(this->V.at<float>(i,j)<0)
+					y2=-3;
+				if(this->V.at<float>(i,j)>0)
+				    y2=3;
+
+				CvPoint p2 = cvPoint(p.x + x2, p.y + y2);
 				cv::line( *img_a, p, p2, CV_RGB(0,255,0), 1, CV_AA, 0 );
 
 			}

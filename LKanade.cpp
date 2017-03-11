@@ -22,9 +22,9 @@ LKanade::LKanade(int vecindad,cv::Mat* img_t, cv::Mat* img_t1):Calculaflujos(img
 	this->IyiIti= Mat::zeros(r,c,CV_32F); //Sumatorio  Iyi* Iti
 	this->Ix2iIy2i= Mat::zeros(r,c,CV_32F); // Sumatior Ix cuadrado * Iy cuadrado
 	this->IyiIxi = Mat::zeros(r,c,CV_32F);
-	this->U= Mat::zeros(r,c,CV_32F); // Sumatior Ix cuadrado * Iy cuadrado
-	this->V= Mat::zeros(r,c,CV_32F); // Sumatior Ix cuadrado * Iy cuadrado
-
+	this->U= Mat::zeros(r,c,CV_32F); // componente U
+	this->V= Mat::zeros(r,c,CV_32F); // componente V
+	this->M= Mat::zeros(r,c,CV_32F); // Modulos
 
 }
 
@@ -85,12 +85,43 @@ void LKanade::Calcula_UV(){
 	}
 
 
-	/*namedWindow( "Ix2i", WINDOW_AUTOSIZE );
-	imshow( "Ix2i", this->V );
+	/*namedWindow( "V", WINDOW_AUTOSIZE );
+	imshow( "V", this->V );
+	namedWindow( "U", WINDOW_AUTOSIZE );
+	imshow( "U", this->U );
 	waitKey(0);
 	destroyAllWindows();*/
 
 }
+
+cv::Mat* LKanade::get_U(){
+
+	return &(this->U);
+}
+cv::Mat* LKanade::get_V(){
+
+	return &(this->V);
+}
+
+void LKanade::pintaVector(cv::Mat* img_a){
+	int c=(img_a)->cols;
+	int r=(img_a)->rows;
+	//#pragma omp parallel for simd collapse (2)
+	for (int i=3;i<=(r-3);i++){
+		for (int j=3;j<=(c-3);j++){
+			CvPoint p = cvPoint(j, i);
+			double modulo = sqrt(this->U.at<float>(i,j) + this->V.at<float>(i,j));
+			if (modulo>=1){
+				cerr<<modulo<<",";
+				CvPoint p2 = cvPoint(p.x + 3, p.y + 3);
+				cv::line( *img_a, p, p2, CV_RGB(0,255,0), 1, CV_AA, 0 );
+
+			}
+		}
+	}
+
+}
+
 
 LKanade::~LKanade() {
 	// TODO Auto-generated destructor stub

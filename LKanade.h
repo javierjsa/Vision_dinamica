@@ -25,12 +25,18 @@ private:
 	Mat IyiIxi;
 	Mat U;
 	Mat V;
+	Mat M;
 
 
 public:
 	LKanade(int vecindad,cv::Mat* img_t, cv::Mat* img_t1);
 
 	void Calcula_UV();
+
+	cv::Mat* get_U();
+	cv::Mat* get_V();
+
+	void pintaVector(cv::Mat* img_a);
 
 	virtual ~LKanade();
 };

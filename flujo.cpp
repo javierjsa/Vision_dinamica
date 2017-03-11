@@ -31,6 +31,7 @@
 using namespace cv;
 using namespace std;
 
+
 int main(int argc, char** argv) {
 
 	Mat img_a;
@@ -49,17 +50,29 @@ int main(int argc, char** argv) {
 
 	//cvtColor(InputArray src, OutputArray dst, int code, int dstCn=0
 
-	cvtColor(img_a,img_a,CV_RGB2GRAY,0);
-	cvtColor(img_b,img_b,CV_RGB2GRAY,0);
+	Mat img_c;
+	Mat img_d;
+
+	cvtColor(img_a,img_c,CV_RGB2GRAY,0);
+	cvtColor(img_b,img_d,CV_RGB2GRAY,0);
 
 	//Calculaflujos a = Calculaflujos(&img_a,&img_b);
 	//a.Calcula_gradiente();
 
-	LKanade b = LKanade(1,&img_a,&img_b);
+	LKanade b = LKanade(1,&img_c,&img_d);
 	b.Calcula_gradiente();
 	b.Calcula_UV();
+	b.pintaVector(&img_a);
 	//HShunck c =HShunck(1,&img_a,&img_b);
 	//c.Calcula_gradiente();
+
+    //cv::Mat* U=b.get_U();
+    //cv::Mat* V=b.get_V();
+
+	namedWindow( "Vector", WINDOW_AUTOSIZE );
+	imshow( "Vector", img_a);
+	waitKey(0);
+	destroyAllWindows();
 
 
 

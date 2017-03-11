@@ -34,15 +34,15 @@ Calculaflujos::Calculaflujos(cv::Mat* img_t, cv::Mat* img_t1) {
 		int c=(this->img_t)->cols;
 	    int r=(this->img_t)->rows;
 
-		this->Ixt= Mat::zeros(r,c,CV_32F); //Gradiente X de t
-		this->Iyt= Mat::zeros(r,c,CV_32F); // Gradiente Y de t
-		this->Ixt1= Mat::zeros(r,c,CV_32F); // Gradiente x de t1
-		this->Iyt1= Mat::zeros(r,c,CV_32F); // Gradiente y de t1
-		this->Ix= Mat::zeros(r,c,CV_32F);
-		this->Iy= Mat::zeros(r,c,CV_32F);
-		this->I2t= Mat::zeros(r,c,CV_32F);
-		this->I2t1= Mat::zeros(r,c,CV_32F);
-		this->It= Mat::zeros(r,c,CV_32F);
+		this->Ixt= Mat::zeros(r,c,CV_32FC1); //Gradiente X de t
+		this->Iyt= Mat::zeros(r,c,CV_32FC1); // Gradiente Y de t
+		this->Ixt1= Mat::zeros(r,c,CV_32FC1); // Gradiente x de t1
+		this->Iyt1= Mat::zeros(r,c,CV_32FC1); // Gradiente y de t1
+		this->Ix= Mat::zeros(r,c,CV_32FC1);
+		this->Iy= Mat::zeros(r,c,CV_32FC1);
+		this->I2t= Mat::zeros(r,c,CV_32FC1);
+		this->I2t1= Mat::zeros(r,c,CV_32FC1);
+		this->It= Mat::zeros(r,c,CV_32FC1);
 
 	}
 
@@ -54,14 +54,14 @@ void Calculaflujos::Calcula_gradiente(){
 		//int scale = 1;
 		//int delta = 0;
 
-		Sobel( *(this->img_t), this->Ixt, CV_32F, 1, 0, kernel_size);
-		Sobel( *(this->img_t), this->Iyt, CV_32F, 0, 1, kernel_size);
+		Sobel( *(this->img_t), this->Ixt, CV_32FC1, 1, 0, kernel_size);
+		Sobel( *(this->img_t), this->Iyt, CV_32FC1, 0, 1, kernel_size);
 
 		this->Ixt=abs(this->Ixt);
 		this->Iyt=abs(this->Iyt);
 
-		Sobel( *(this->img_t1), this->Ixt1, CV_32F, 1, 0, kernel_size);
-		Sobel( *(this->img_t1), this->Iyt1, CV_32F, 0, 1, kernel_size);
+		Sobel( *(this->img_t1), this->Ixt1, CV_32FC1, 1, 0, kernel_size);
+		Sobel( *(this->img_t1), this->Iyt1, CV_32FC1, 0, 1, kernel_size);
 
 		this->Ixt1=abs(this->Ixt1);
 		this->Iyt1=abs(this->Iyt1);

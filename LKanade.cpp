@@ -13,18 +13,18 @@ LKanade::LKanade(int vecindad,cv::Mat* img_t, cv::Mat* img_t1):Calculaflujos(img
 	int c=(this->img_t)->cols;
 	int r=(this->img_t)->rows;
 
-	this->Ixi= Mat::zeros(r,c,CV_32F); //Sumatorio Ix
-	this->Iyi= Mat::zeros(r,c,CV_32F); // Sumatorio Iy
-	this->Ix2i= Mat::zeros(r,c,CV_32F); // Sumatorio Ix al cuadrado
-	this->Iy2i= Mat::zeros(r,c,CV_32F); // Sumatorio Iy al cuadrado
-	this->Iti= Mat::zeros(r,c,CV_32F);  // Sumatorio It
-	this->IxiIti= Mat::zeros(r,c,CV_32F); //Sumatorio Ixi* Iti
-	this->IyiIti= Mat::zeros(r,c,CV_32F); //Sumatorio  Iyi* Iti
-	this->Ix2iIy2i= Mat::zeros(r,c,CV_32F); // Sumatior Ix cuadrado * Iy cuadrado
-	this->IyiIxi = Mat::zeros(r,c,CV_32F);
-	this->U= Mat::zeros(r,c,CV_32F); // componente U
-	this->V= Mat::zeros(r,c,CV_32F); // componente V
-	this->M= Mat::zeros(r,c,CV_32F); // Modulos
+	this->Ixi= Mat::zeros(r,c,CV_32FC1); //Sumatorio Ix
+	this->Iyi= Mat::zeros(r,c,CV_32FC1); // Sumatorio Iy
+	this->Ix2i= Mat::zeros(r,c,CV_32FC1); // Sumatorio Ix al cuadrado
+	this->Iy2i= Mat::zeros(r,c,CV_32FC1); // Sumatorio Iy al cuadrado
+	this->Iti= Mat::zeros(r,c,CV_32FC1);  // Sumatorio It
+	this->IxiIti= Mat::zeros(r,c,CV_32FC1); //Sumatorio Ixi* Iti
+	this->IyiIti= Mat::zeros(r,c,CV_32FC1); //Sumatorio  Iyi* Iti
+	this->Ix2iIy2i= Mat::zeros(r,c,CV_32FC1); // Sumatior Ix cuadrado * Iy cuadrado
+	this->IyiIxi = Mat::zeros(r,c,CV_32FC1);
+	this->U= Mat::zeros(r,c,CV_32FC1); // componente U
+	this->V= Mat::zeros(r,c,CV_32FC1); // componente V
+	this->M= Mat::zeros(r,c,CV_32FC1); // Modulos
 
 }
 
@@ -110,17 +110,17 @@ void LKanade::pintaVector(cv::Mat* img_a){
 	for (int i=3;i<=(r-3);i++){
 		for (int j=3;j<=(c-3);j++){
 			CvPoint p = cvPoint(j, i);
-			double modulo = sqrt(this->U.at<float>(i,j) + this->V.at<float>(i,j));
+			float modulo = sqrt(this->U.at<float>(i,j) + this->V.at<float>(i,j));
 			if (modulo>0){
 				int x2,y2;
-				if(this->U.at<float>(i,j)<0)
-					x2=-3;
-				if(this->U.at<float>(i,j)>0)
-					x2=3;
-				if(this->V.at<float>(i,j)<0)
-					y2=-3;
-				if(this->V.at<float>(i,j)>0)
-				    y2=3;
+				if(this->U.at<float>(i,j)<0 and this->U.at<float>(i,j)<-5)
+					x2=-5;
+				if(this->U.at<float>(i,j)>0 and this->U.at<float>(i,j)>5)
+					x2=5;
+				if(this->V.at<float>(i,j)<-0 and this->V.at<float>(i,j)<-5)
+					y2=-5;
+				if(this->V.at<float>(i,j)>0 and this->V.at<float>(i,j)>-5)
+				    y2=5;
 
 				CvPoint p2 = cvPoint(p.x + x2, p.y + y2);
 				cv::line( *img_a, p, p2, CV_RGB(0,255,0), 1, CV_AA, 0 );

@@ -1,7 +1,7 @@
 /*
  * HShunck.h
  *
- *  Created on: 7 mar. 2017
+ *  Created on: 12 mar. 2017
  *      Author: jsa
  */
 
@@ -11,9 +11,36 @@
 #include "Calculaflujos.h"
 
 class HShunck: public Calculaflujos {
+
+private:
+	int vecindad;
+	float landa;
+
+	float Uant;
+	float Vant;
+
+	float Uact;
+	float Vact;
+
+	Mat Ixi;
+	Mat Iyi;
+	Mat Ix2i;
+	Mat Iy2i;
+	Mat Iti;
+	Mat IxiIti;
+	Mat IyiIti;
+	Mat Ix2iIy2i;
+	Mat IyiIxi;
+	Mat U;
+	Mat V;
+	Mat M;
+
 public:
-	HShunck(int a,cv::Mat* img_t, cv::Mat* img_t1);
+	HShunck(int vecindad,float landa,cv::Mat* img_t, cv::Mat* img_t1);
+	//void Calcula_sumatorios();
+	void Iterar(int iteraciones, float margen);
 	virtual ~HShunck();
 };
+
 
 #endif /* HSHUNCK_H_ */

@@ -46,6 +46,8 @@ Calculaflujos::Calculaflujos(cv::Mat* img_t, cv::Mat* img_t1) {
 
 	}
 
+
+
 void Calculaflujos::Calcula_gradiente(){
 
 

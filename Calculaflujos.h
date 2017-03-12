@@ -46,7 +46,7 @@ public:
 
 	Calculaflujos(cv::Mat* img_t, cv::Mat* img_t1);
 
-	void Calcula_gradiente();
+	virtual void Calcula_gradiente();
 
 	virtual ~Calculaflujos();
 

@@ -12,7 +12,7 @@
 
 class LKanade: public Calculaflujos {
 
-private:
+protected:
 	int vecindad;
 	Mat Ixi;
 	Mat Iyi;
@@ -31,10 +31,12 @@ private:
 public:
 	LKanade(int vecindad,cv::Mat* img_t, cv::Mat* img_t1);
 
-	void Calcula_UV();
+	virtual void Calcula_UV();
 
 	cv::Mat* get_U();
 	cv::Mat* get_V();
+
+	void Calcula_sumatorios();
 
 	void pintaVector(cv::Mat* img_a);
 

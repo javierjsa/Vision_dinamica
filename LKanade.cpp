@@ -34,26 +34,7 @@ void LKanade::Calcula_UV(){
 	int r=(this->img_t)->rows;
 
 	//calculo sumatorios
-	#pragma omp parallel for simd collapse (2)
-	for (int i=this->vecindad;i<=(r-this->vecindad);i++){
-		for (int j=this->vecindad;j<=(c-this->vecindad);j++){
-			//float pixel = this->Ixi.at<float>(i,j);
-
-			for (int swi=(i-this->vecindad);swi<=(i+this->vecindad);swi++){
-				for (int swj=(j-this->vecindad);swj<=(j+this->vecindad);swj++){
-
-					this->Ixi.at<float>(i,j)+=this->Ix.at<float>(swi,swj);
-					this->Iyi.at<float>(i,j)+=this->Iy.at<float>(swi,swj);
-					this->Ix2i.at<float>(i,j)+=(this->Ix.at<float>(swi,swj))*(this->Ix.at<float>(swi,swj));
-					this->Iy2i.at<float>(i,j)+=(this->Iy.at<float>(swi,swj))*(this->Iy.at<float>(swi,swj));
-					this->Iti.at<float>(i,j)+=this->It.at<float>(swi,swj);
-					this->IxiIti.at<float>(i,j)+=(this->Ix.at<float>(swi,swj))*(this->It.at<float>(swi,swj));
-					this->IyiIti.at<float>(i,j)+=(this->Iy.at<float>(swi,swj))*(this->It.at<float>(swi,swj));
-					this->IyiIxi.at<float>(i,j)+=(this->Iy.at<float>(swi,swj))*(this->Ix.at<float>(swi,swj));
-				}
-			}
-		}
-	}
+	this->Calcula_sumatorios();
 
 	//calculo de U,V
 	#pragma omp parallel for simd collapse (2)
@@ -101,6 +82,35 @@ cv::Mat* LKanade::get_U(){
 cv::Mat* LKanade::get_V(){
 
 	return &(this->V);
+}
+
+void LKanade::Calcula_sumatorios(){
+
+	int c=(this->img_t)->cols;
+	int r=(this->img_t)->rows;
+
+	//calculo sumatorios
+	#pragma omp parallel for simd collapse (2)
+	for (int i=this->vecindad;i<=(r-this->vecindad);i++){
+		for (int j=this->vecindad;j<=(c-this->vecindad);j++){
+			//float pixel = this->Ixi.at<float>(i,j);
+
+			for (int swi=(i-this->vecindad);swi<=(i+this->vecindad);swi++){
+				for (int swj=(j-this->vecindad);swj<=(j+this->vecindad);swj++){
+
+					this->Ixi.at<float>(i,j)+=this->Ix.at<float>(swi,swj);
+					this->Iyi.at<float>(i,j)+=this->Iy.at<float>(swi,swj);
+					this->Ix2i.at<float>(i,j)+=(this->Ix.at<float>(swi,swj))*(this->Ix.at<float>(swi,swj));
+					this->Iy2i.at<float>(i,j)+=(this->Iy.at<float>(swi,swj))*(this->Iy.at<float>(swi,swj));
+					this->Iti.at<float>(i,j)+=this->It.at<float>(swi,swj);
+					this->IxiIti.at<float>(i,j)+=(this->Ix.at<float>(swi,swj))*(this->It.at<float>(swi,swj));
+					this->IyiIti.at<float>(i,j)+=(this->Iy.at<float>(swi,swj))*(this->It.at<float>(swi,swj));
+					this->IyiIxi.at<float>(i,j)+=(this->Iy.at<float>(swi,swj))*(this->Ix.at<float>(swi,swj));
+				}
+			}
+		}
+	}
+
 }
 
 void LKanade::pintaVector(cv::Mat* img_a){

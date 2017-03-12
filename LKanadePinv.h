@@ -15,11 +15,11 @@ class LKanadePinv: public LKanade {
 protected:
 
 	Mat matrix;
+	Mat UV;
 
 public:
 	LKanadePinv(int vecindad,cv::Mat* img_t, cv::Mat* img_t1);
 	void Calcula_UV();
-
 	virtual ~LKanadePinv();
 };
 

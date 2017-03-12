@@ -38,23 +38,27 @@ void LKanadePinv::Calcula_UV(){
 			this->matrix.at<float>(1,0)=c;
 			this->matrix.at<float>(1,1)=a;*/
 
-			this->matrix.at<float>(0,0)=5;
-			this->matrix.at<float>(0,1)=10;
-			this->matrix.at<float>(1,0)=4;
-			this->matrix.at<float>(1,1)=8;
 
 			Mat C = (Mat_<float>(2,2) << e, c, c, a);
+			Mat D = (Mat_<float>(2,1) << -b, -d);
 
-			cout<<C<<"\n";
-			Mat res;
-			invert(C,res, DECOMP_SVD);
+			invert(C,this->matrix, DECOMP_SVD);
+			Mat UV= this->matrix*D;
 
-			cout<<res<<"\n";
-			cout<<"--------------------\n";
+			this->U.at<float>(i,j)=UV.at<float>(0,0);
+			this->V.at<float>(i,j)=UV.at<float>(1,0);
+
+			//cout<<UV<<"\n";
+			//cout<<"--------------------\n";
 		}
 	}
 
 }
+
+
+
+
+
 LKanadePinv::~LKanadePinv() {
 	// TODO Auto-generated destructor stub
 }

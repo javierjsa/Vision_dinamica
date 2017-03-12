@@ -117,8 +117,8 @@ void LKanade::pintaVector(cv::Mat* img_a){
 	int c=(img_a)->cols;
 	int r=(img_a)->rows;
 	#pragma omp parallel for simd collapse (2)
-	for (int i=3;i<=(r-3);i++){
-		for (int j=3;j<=(c-3);j++){
+	for (int i=this->vecindad;i<=(r-this->vecindad);i++){
+		for (int j=this->vecindad;j<=(c-this->vecindad);j++){
 			CvPoint p = cvPoint(j, i);
 			float modulo = sqrt(this->U.at<float>(i,j) + this->V.at<float>(i,j));
 			if (modulo>0){

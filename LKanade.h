@@ -38,7 +38,7 @@ public:
 
 	void Calcula_sumatorios();
 
-	void pintaVector(cv::Mat* img_a);
+	virtual void pintaVector(cv::Mat* img_a);
 
 	virtual ~LKanade();
 };

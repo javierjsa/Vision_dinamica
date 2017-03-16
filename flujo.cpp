@@ -60,8 +60,8 @@ int main(int argc, char** argv) {
 	//Calculaflujos a = Calculaflujos(&img_a,&img_b);
 	//a.Calcula_gradiente();
 
-	//LKanade b = LKanade(2,&img_c,&img_d);
-	LKanadePinv b = LKanadePinv(2,&img_c,&img_d);
+	LKanade b = LKanade(3,&img_c,&img_d);
+	//LKanadePinv b = LKanadePinv(2,&img_c,&img_d);
 	b.Calcula_gradiente();
 	b.Calcula_UV();
 	b.pintaVector(&img_a);

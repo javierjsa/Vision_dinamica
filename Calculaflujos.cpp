@@ -59,14 +59,14 @@ void Calculaflujos::Calcula_gradiente(){
 		Sobel( *(this->img_t), this->Ixt, CV_32FC1, 1, 0, kernel_size);
 		Sobel( *(this->img_t), this->Iyt, CV_32FC1, 0, 1, kernel_size);
 
-		this->Ixt=abs(this->Ixt);
-		this->Iyt=abs(this->Iyt);
+		//this->Ixt=abs(this->Ixt);
+		//this->Iyt=abs(this->Iyt);
 
 		Sobel( *(this->img_t1), this->Ixt1, CV_32FC1, 1, 0, kernel_size);
 		Sobel( *(this->img_t1), this->Iyt1, CV_32FC1, 0, 1, kernel_size);
 
-		this->Ixt1=abs(this->Ixt1);
-		this->Iyt1=abs(this->Iyt1);
+		//this->Ixt1=abs(this->Ixt1);
+		//this->Iyt1=abs(this->Iyt1);
 
 
 		this->Ix=(this->Ixt+Ixt1)/2;

@@ -117,24 +117,28 @@ void LKanade::pintaVector(cv::Mat* img_a){
 	int c=(img_a)->cols;
 	int r=(img_a)->rows;
 	#pragma omp parallel for simd collapse (2)
-	for (int i=this->vecindad;i<=(r-this->vecindad);i++){
-		for (int j=this->vecindad;j<=(c-this->vecindad);j++){
-			CvPoint p = cvPoint(j, i);
-			float modulo = sqrt(this->U.at<float>(i,j) + this->V.at<float>(i,j));
-			if (modulo>0){
-				int x2,y2;
-				if(this->U.at<float>(i,j)<0 and this->U.at<float>(i,j)<-5)
-					x2=-5;
-				if(this->U.at<float>(i,j)>0 and this->U.at<float>(i,j)>5)
-					x2=5;
-				if(this->V.at<float>(i,j)<-0 and this->V.at<float>(i,j)<-5)
-					y2=-5;
-				if(this->V.at<float>(i,j)>0 and this->V.at<float>(i,j)>-5)
-				    y2=5;
+	for (int i=this->vecindad;i<=(r-this->vecindad);i=i+5){ //filas, o sea,y
+		for (int j=this->vecindad;j<=(c-this->vecindad);j=j+5){ //columnas, o sea, x
 
-				CvPoint p2 = cvPoint(p.x + x2, p.y + y2);
-				cv::line( *img_a, p, p2, CV_RGB(0,255,0), 1, CV_AA, 0 );
+			CvPoint p = cvPoint(j,i);
+			float modulo = sqrt(this->U.at<float>(i,j) + this->V.at<float>(i,j)); //at(fila,columna)
+			float x2=U.at<float>(i,j);
+			float y2=V.at<float>(i,j);
+			if (modulo>2 && modulo<1000000000 ){
 
+				CvPoint p2 = cvPoint(p.x + p2.x, p.y +p2.y);
+				float ang= atan((p.y+y2)/(p.x+x2))*180 / CV_PI;
+				CvPoint dir = cv::Point(p.x+(log(modulo) * cos(ang)), p.y+(log(modulo) * sin(ang))); // calculate direction
+
+				if (isnan(ang)){
+					continue;
+				}
+				//cout<<"------------------------------\n";
+				//cout<<"p.x:"<<p.x<<" p.y:"<<p.y<<"\n";
+				//cout<<"ang:"<<ang<<" dir_x:"<<dir.x<<" dir_y:"<<dir.y<<"\n";
+
+				//cv::line( *img_a, p, dir, CV_RGB(0,255,0), 1, CV_AA, 0 );
+			    cv::arrowedLine(*img_a, p,dir, CV_RGB(0,255,0), 1,  CV_AA, 0, 0.5); // draw arrow!
 			}
 		}
 	}

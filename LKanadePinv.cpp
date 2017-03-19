@@ -11,7 +11,7 @@ LKanadePinv::LKanadePinv(int vecindad,cv::Mat* img_t, cv::Mat* img_t1):LKanade(v
 
 	int c=(this->img_t)->cols;
 	int r=(this->img_t)->rows;
-	this->matrix= Mat::zeros(r,c,CV_32FC1); //Sumatorio Ix
+	this->matrix= Mat::zeros(r,c,CV_32F); //Sumatorio Ix
 
 }
 
@@ -42,8 +42,10 @@ void LKanadePinv::Calcula_UV(){
 			Mat C = (Mat_<float>(2,2) << e, c, c, a);
 			Mat D = (Mat_<float>(2,1) << -b, -d);
 
-			invert(C,this->matrix, DECOMP_SVD);
-			Mat UV= this->matrix*D;
+			Mat matr;
+
+			invert(C,matr, DECOMP_SVD);
+			Mat UV= matr*D;
 
 			this->U.at<float>(i,j)=UV.at<float>(0,0);
 			this->V.at<float>(i,j)=UV.at<float>(1,0);

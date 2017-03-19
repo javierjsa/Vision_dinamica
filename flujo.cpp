@@ -36,7 +36,7 @@ using namespace std;
 int main(int argc, char** argv) {
 
 	Mat img_a;
-		Mat img_b;
+	Mat img_b;
 
 		/*img_a = imread(argv[1], CV_LOAD_IMAGE_COLOR);
 		img_b = imread(argv[2], CV_LOAD_IMAGE_COLOR);
@@ -92,8 +92,8 @@ int main(int argc, char** argv) {
 			//Calculaflujos a = Calculaflujos(&img_a,&img_b);
 			//a.Calcula_gradiente();
 			cerr<<"frame...\n";
-			LKanade b = LKanade(20,&img_c,&img_d);
-			//LKanadePinv b = LKanadePinv(2,&img_c,&img_d);
+			//LKanade b = LKanade(20,&img_c,&img_d);
+			LKanadePinv b = LKanadePinv(20,&img_c,&img_d);
 			b.Calcula_gradiente();
 			b.Calcula_UV();
 			b.pintaVector(&img_a);

@@ -13,18 +13,18 @@ LKanade::LKanade(int vecindad,cv::Mat* img_t, cv::Mat* img_t1):Calculaflujos(img
 	int c=(this->img_t)->cols;
 	int r=(this->img_t)->rows;
 
-	this->Ixi= Mat::zeros(r,c,CV_32FC1); //Sumatorio Ix
-	this->Iyi= Mat::zeros(r,c,CV_32FC1); // Sumatorio Iy
-	this->Ix2i= Mat::zeros(r,c,CV_32FC1); // Sumatorio Ix al cuadrado
-	this->Iy2i= Mat::zeros(r,c,CV_32FC1); // Sumatorio Iy al cuadrado
-	this->Iti= Mat::zeros(r,c,CV_32FC1);  // Sumatorio It
-	this->IxiIti= Mat::zeros(r,c,CV_32FC1); //Sumatorio Ixi* Iti
-	this->IyiIti= Mat::zeros(r,c,CV_32FC1); //Sumatorio  Iyi* Iti
-	this->Ix2iIy2i= Mat::zeros(r,c,CV_32FC1); // Sumatior Ix cuadrado * Iy cuadrado
-	this->IyiIxi = Mat::zeros(r,c,CV_32FC1);
-	this->U= Mat::zeros(r,c,CV_32FC1); // componente U
-	this->V= Mat::zeros(r,c,CV_32FC1); // componente V
-	this->M= Mat::zeros(r,c,CV_32FC1); // Modulos
+	this->Ixi= Mat::zeros(r,c,CV_32F); //Sumatorio Ix
+	this->Iyi= Mat::zeros(r,c,CV_32F); // Sumatorio Iy
+	this->Ix2i= Mat::zeros(r,c,CV_32F); // Sumatorio Ix al cuadrado
+	this->Iy2i= Mat::zeros(r,c,CV_32F); // Sumatorio Iy al cuadrado
+	this->Iti= Mat::zeros(r,c,CV_32F);  // Sumatorio It
+	this->IxiIti= Mat::zeros(r,c,CV_32F); //Sumatorio Ixi* Iti
+	this->IyiIti= Mat::zeros(r,c,CV_32F); //Sumatorio  Iyi* Iti
+	this->Ix2iIy2i= Mat::zeros(r,c,CV_32F); // Sumatior Ix cuadrado * Iy cuadrado
+	this->IyiIxi = Mat::zeros(r,c,CV_32F);
+	this->U= Mat::zeros(r,c,CV_32F); // componente U
+	this->V= Mat::zeros(r,c,CV_32F); // componente V
+	this->M= Mat::zeros(r,c,CV_32F); // Modulos
 
 }
 
@@ -124,12 +124,12 @@ void LKanade::pintaVector(cv::Mat* img_a){
 			float modulo = sqrt(this->U.at<float>(i,j) + this->V.at<float>(i,j)); //at(fila,columna)
 			float x2=U.at<float>(i,j);
 			float y2=V.at<float>(i,j);
-			if (modulo>2 && modulo<1000000000 ){
+			if (modulo>0){
 
 				CvPoint p2 = cvPoint(p.x + x2, p.y +y2);
 				float ang= atan((p.y+y2)/(p.x+x2))*180 / CV_PI;
 				//CvPoint dir = cv::Point(p.x+(5* cos(ang)), p.y+(5 * sin(ang))); // calculate direction
-				CvPoint dir = cv::Point(p.x+x2/(0.5*x2+0.5*y2), p.y+y2/(0.5*x2+0.5*y2)); // calculate direction
+				CvPoint dir = cv::Point(p.x+(x2*20), p.y+(y2*20)); // calculate direction
 				if (isnan(ang)){
 					continue;
 				}

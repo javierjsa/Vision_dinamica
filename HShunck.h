@@ -10,35 +10,38 @@
 
 #include "Calculaflujos.h"
 
-class HShunck: public Calculaflujos {
+class HShunck {
 
 private:
 	int vecindad;
 	float landa;
 
-	float Uant;
-	float Vant;
+	Mat Uant;
+	Mat Vant;
 
-	float Uact;
-	float Vact;
+	Mat Uact;
+	Mat Vact;
 
-	Mat Ixi;
-	Mat Iyi;
-	Mat Ix2i;
-	Mat Iy2i;
-	Mat Iti;
-	Mat IxiIti;
-	Mat IyiIti;
-	Mat Ix2iIy2i;
-	Mat IyiIxi;
+	Mat Umean;
+	Mat Vmean;
+
+	Mat* img_t;
+	Mat Ix;
+	Mat Iy;
+	Mat Ix2;
+	Mat Iy2;
+	Mat It;
+	Mat U0;
+	Mat V0;
 	Mat U;
 	Mat V;
 	Mat M;
 
+
 public:
-	HShunck(int vecindad,float landa,cv::Mat* img_t, cv::Mat* img_t1);
-	//void Calcula_sumatorios();
-	void Iterar(int iteraciones, float margen);
+	HShunck(int vecindad,float landa,cv::Mat* img_t);
+	void Calcula_gradiente();
+	void Iterar(int iteraciones, float margen,cv::Mat* img_t);
 	virtual ~HShunck();
 };
 

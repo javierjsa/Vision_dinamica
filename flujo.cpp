@@ -70,15 +70,15 @@ int main(int argc, char** argv) {
 		        return -1;
 		    }
 
-
+		cout<<"\n";
 
 		Mat img_c;
 		Mat img_d;
 
-		cap>>img_b;
+
 		while(true){
 
-			img_a=img_b.clone();
+			cap>>img_a;
 
 			cap>>img_b;
 			if (img_b.empty()) break;
@@ -91,9 +91,9 @@ int main(int argc, char** argv) {
 
 			//Calculaflujos a = Calculaflujos(&img_a,&img_b);
 			//a.Calcula_gradiente();
-			cerr<<"frame...\n";
+			cerr<<".";
 			//LKanade b = LKanade(20,&img_c,&img_d);
-			LKanadePinv b = LKanadePinv(20,&img_c,&img_d);
+			LKanadePinv b = LKanadePinv(40,&img_c,&img_d);
 			b.Calcula_gradiente();
 			b.Calcula_UV();
 			b.pintaVector(&img_a);
@@ -112,7 +112,7 @@ int main(int argc, char** argv) {
 			outputVideo<<img_b;
 		}
 
-
+	cout<<"\n";
 	return 0;
 }
 

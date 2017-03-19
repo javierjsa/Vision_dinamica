@@ -52,16 +52,18 @@ void Calculaflujos::Calcula_gradiente(){
 
 
 
-		int kernel_size = 21;
+		int kernel_size = 41;
 
-		float sobelKernelNormalizationDivisor = 4.f;
-		float sobelKernelNormalizationFactor = 1.f / sobelKernelNormalizationDivisor;
+		GaussianBlur(*(this->img_t),this->I2t,Size(kernel_size,kernel_size),0,0,BORDER_DEFAULT);
+		GaussianBlur(*(this->img_t1),this->I2t1,Size(kernel_size,kernel_size),0,0,BORDER_DEFAULT);
 
-		Sobel(*(this->img_t), this->Ixt, CV_32F, 1, 0, 3);
-		Sobel(*(this->img_t), this->Iyt, CV_32F, 0, 1, 3);
+		this->It=(this->I2t1)-(this->I2t);
 
-		Sobel(*(this->img_t1), this->Ixt1, CV_32F, 1, 0, 3);
-		Sobel(*(this->img_t1), this->Iyt1, CV_32F, 0, 1, 3);
+		Sobel(*this->img_t, this->Ixt, CV_32F, 1, 0, 3);
+		Sobel(*this->img_t, this->Iyt, CV_32F, 0, 1, 3);
+
+		Sobel(this->I2t1, this->Ixt1, CV_32F, 1, 0, 3);
+		Sobel(this->I2t1, this->Iyt1, CV_32F, 0, 1, 3);
 
 		/*Scharr(*(this->img_t), this->Ixt, CV_32F, 1, 0);
 		Scharr(*(this->img_t), this->Iyt, CV_32F, 0, 1);
@@ -76,10 +78,7 @@ void Calculaflujos::Calcula_gradiente(){
 		this->Ix=(this->Ixt+this->Ixt1)/2;
 		this->Iy=(this->Iyt+this->Iyt1)/2;
 
-		GaussianBlur(*(this->img_t),this->I2t,Size(kernel_size,kernel_size),0,0,BORDER_DEFAULT);
-		GaussianBlur(*(this->img_t1),this->I2t1,Size(kernel_size,kernel_size),0,0,BORDER_DEFAULT);
 
-		this->It=(this->I2t1)-(this->I2t);
 
 
 		/*namedWindow( "Ixt", WINDOW_AUTOSIZE );

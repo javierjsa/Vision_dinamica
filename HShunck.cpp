@@ -7,37 +7,56 @@
 
 #include "HShunck.h"
 
-HShunck::HShunck(int vecindad,float landa,cv::Mat* img_t, cv::Mat* img_t1):Calculaflujos(img_t,img_t1)  {
+HShunck::HShunck(int vecindad,float landa,cv::Mat* img_t){
 
-	this->vecindad=vecindad;
-	this->landa=landa;
-
-	this->Uant=0.1;
-	this->Vant=0.1;
-
-	this->Uact=0.0;
-	this->Vact=0.0;
+	this->img_t=img_t;
 
 	int c=(this->img_t)->cols;
 	int r=(this->img_t)->rows;
 
-	this->Ixi= Mat::zeros(r,c,CV_32FC1); //Sumatorio Ix
-	this->Iyi= Mat::zeros(r,c,CV_32FC1); // Sumatorio Iy
-	this->Ix2i= Mat::zeros(r,c,CV_32FC1); // Sumatorio Ix al cuadrado
-	this->Iy2i= Mat::zeros(r,c,CV_32FC1); // Sumatorio Iy al cuadrado
-	this->Iti= Mat::zeros(r,c,CV_32FC1);  // Sumatorio It
-	//this->IxiIti= Mat::zeros(r,c,CV_32FC1); //Sumatorio Ixi* Iti
-	//this->IyiIti= Mat::zeros(r,c,CV_32FC1); //Sumatorio  Iyi* Iti
-	//this->Ix2iIy2i= Mat::zeros(r,c,CV_32FC1); // Sumatior Ix cuadrado * Iy cuadrado
-	//this->IyiIxi = Mat::zeros(r,c,CV_32FC1);
-	this->U= Mat::zeros(r,c,CV_32FC1); // componente U
-	this->V= Mat::zeros(r,c,CV_32FC1); // componente V
-	this->M= Mat::zeros(r,c,CV_32FC1); // Modulos
+	this->vecindad=vecindad;
+	this->landa=landa;
+
+	this->Uant=Mat::zeros(r,c,CV_32F);
+	this->Vant=Mat::zeros(r,c,CV_32F);
+
+	this->Uact=Mat::zeros(r,c,CV_32F);
+	this->Vact=Mat::zeros(r,c,CV_32F);
+
+	this->Umean=Mat::zeros(r,c,CV_32F);
+	this->Vmean=Mat::zeros(r,c,CV_32F);
+
+
+	this->Ix= Mat::zeros(r,c,CV_32F); //Sumatorio Ix
+	this->Iy= Mat::zeros(r,c,CV_32F); // Sumatorio Iy
+	this->Ix2= Mat::zeros(r,c,CV_32F); // Sumatorio Ix al cuadrado
+	this->Iy2= Mat::zeros(r,c,CV_32F); // Sumatorio Iy al cuadrado
+	this->It= Mat::zeros(r,c,CV_32F);  // Sumatorio It
+	this->U= Mat::zeros(r,c,CV_32F); // componente U
+	this->V= Mat::zeros(r,c,CV_32F); // componente V
+	this->M= Mat::zeros(r,c,CV_32F); // Modulos
+
+}
+
+void HShunck::Calcula_gradiente(){
+
+
+
+		int kernel_size = 21;
+
+		GaussianBlur(*this->img_t,this->It,Size(kernel_size,kernel_size),0,0,BORDER_DEFAULT);
+
+		Sobel(*this->img_t, this->Ix, CV_32F, 1, 0, 3);
+		Sobel(*this->img_t, this->Iy, CV_32F, 0, 1, 3);
+
+		this->Ix2=this->Ix.mul(this->Ix);
+		this->Iy2=this->Iy.mul(this->Iy);
 
 }
 
 
-void HShunck::Iterar(int iteraciones, float margen){
+
+void HShunck::Iterar(int iteraciones, float margen,cv::Mat* img_t){
 
 	int it_aux=0;
 	int margen_aux=100;
@@ -45,20 +64,32 @@ void HShunck::Iterar(int iteraciones, float margen){
 	int c=(this->img_t)->cols;
 	int r=(this->img_t)->rows;
 
-	//calculo de U,V
+	//calculo de Umean,Vmean
 	#pragma omp parallel for simd collapse (2)
 	for (int i=this->vecindad;i<=(r-this->vecindad);i++){
 		for (int j=this->vecindad;j<=(c-this->vecindad);j++){
-			while (it_aux<iteraciones && margen_aux>margen){
+			float u_acum;
+			float v_acum;
+			for (int swi=(i-this->vecindad);swi<=(i+this->vecindad);swi++){
+				for (int swj=(j-this->vecindad);swj<=(j+this->vecindad);swj++){
 
-
-
+					u_acum+=this->Uant.at<float>(swi,swj);
+					v_acum+=this->Vant.at<float>(swi,swj);
+				}
 			}
+			this->Uact.at<float>(i,j)=u_acum/(this->vecindad*this->vecindad);
+			this->Vact.at<float>(i,j)=v_acum/(this->vecindad*this->vecindad);
 		}
 	}
 
-}
+	//calculo de Uact,Vact
+	#pragma omp parallel for simd collapse (2)
+	for (int i=this->vecindad;i<=(r-this->vecindad);i++){
+		for (int j=this->vecindad;j<=(c-this->vecindad);j++){
 
+		}
+	}
+}
 //probablemente no hace falta
 /*
 void HShunck::Calcula_sumatorios(){

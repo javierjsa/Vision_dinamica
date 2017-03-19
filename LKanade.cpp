@@ -126,10 +126,10 @@ void LKanade::pintaVector(cv::Mat* img_a){
 			float y2=V.at<float>(i,j);
 			if (modulo>2 && modulo<1000000000 ){
 
-				CvPoint p2 = cvPoint(p.x + p2.x, p.y +p2.y);
+				CvPoint p2 = cvPoint(p.x + x2, p.y +y2);
 				float ang= atan((p.y+y2)/(p.x+x2))*180 / CV_PI;
-				CvPoint dir = cv::Point(p.x+(log(modulo) * cos(ang)), p.y+(log(modulo) * sin(ang))); // calculate direction
-
+				//CvPoint dir = cv::Point(p.x+(5* cos(ang)), p.y+(5 * sin(ang))); // calculate direction
+				CvPoint dir = cv::Point(p.x+x2/(0.5*x2+0.5*y2), p.y+y2/(0.5*x2+0.5*y2)); // calculate direction
 				if (isnan(ang)){
 					continue;
 				}

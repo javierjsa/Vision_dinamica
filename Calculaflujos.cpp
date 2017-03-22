@@ -57,11 +57,20 @@ void Calculaflujos::Calcula_gradiente(){
 
 		this->It=(this->I2t1)-(this->I2t);
 
-		Sobel(*this->img_t, this->Ixt, D_TYPE, 1, 0, 3);
+		Mat kernelx = (Mat_<float>(1,3)<<-0.5, 0, 0.5);
+		Mat kernely = (Mat_<float>(3,1)<<-0.5, 0, 0.5);
+
+		filter2D(this->I2t, this->Ixt, -1, kernelx);
+		filter2D(this->I2t, this->Iyt, -1, kernely);
+
+		filter2D(this->I2t1, this->Ixt1, -1, kernelx);
+		filter2D(this->I2t1, this->Iyt1, -1, kernely);
+
+		/*Sobel(*this->img_t, this->Ixt, D_TYPE, 1, 0, 3);
 		Sobel(*this->img_t, this->Iyt, D_TYPE, 0, 1, 3);
 
 		Sobel(this->I2t1, this->Ixt1, D_TYPE, 1, 0, 3);
-		Sobel(this->I2t1, this->Iyt1, D_TYPE, 0, 1, 3);
+		Sobel(this->I2t1, this->Iyt1, D_TYPE, 0, 1, 3);*/
 
 		this->Ix=(this->Ixt+this->Ixt1)/2;
 		this->Iy=(this->Iyt+this->Iyt1)/2;

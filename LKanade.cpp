@@ -147,7 +147,7 @@ void LKanade::pintaVector(cv::Mat* img_a){
 				//CvPoint p2 = cvPoint(p.x + x2, p.y +y2);
 				//float ang= atan((p.y+y2)/(p.x+x2))*180 / CV_PI;
 				//CvPoint dir = cv::Point(p.x+(5* cos(ang)), p.y+(5 * sin(ang))); // calculate direction
-				CvPoint dir = cv::Point(p.x+(x2*20), p.y+(y2*20)); // calculate direction
+				CvPoint dir = cv::Point(p.x+(x2), p.y+(y2)); // calculate direction
 				//if (isnan(ang)){
 				//	continue;
 				//}

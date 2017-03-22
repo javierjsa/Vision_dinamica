@@ -31,10 +31,7 @@ protected:
 public:
 	LKanade(int vecindad,cv::Mat* img_t, cv::Mat* img_t1);
 
-	virtual void Calcula_UV();
-
-	cv::Mat* get_U();
-	cv::Mat* get_V();
+	virtual void Calcula_UV(cv::Mat* img_t, cv::Mat* img_t1);
 
 	void Calcula_sumatorios();
 

@@ -40,7 +40,7 @@ protected:
 	Mat  I2t1; // Suavizado t+1
 	Mat  It; // Suavizado
 
-	cv::Mat* CalculaGradiente(cv::Mat* img_t);
+
 
 public:
 

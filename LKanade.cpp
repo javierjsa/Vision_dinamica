@@ -136,8 +136,10 @@ void LKanade::pintaVector(cv::Mat* img_a){
 	int r=(img_a)->rows;
 
 	double minh, maxh;
+	Scalar medsc=mean(this->M);
+	float med=log(medsc.val[0]*log(this->step));
 	cv::minMaxLoc(this->M, &minh, &maxh);
-
+	//float mlog =log(maxh);
 
 	//Mat cM,cMU8;
 	//this->M.convertTo(cMU8, CV_8UC1);
@@ -164,12 +166,12 @@ void LKanade::pintaVector(cv::Mat* img_a){
 				float x2=_U[j];
 				float y2=_V[j];
 				float max = (abs(x2) > abs(y2)) ? abs(x2) : abs(y2);
-				float ratio = (this->step/2)/max;
+				float ratio = (this->step)/max;
 				int hue=(int)((modulo-minh)*255)/(maxh-minh);
 				//CvPoint p2 = cvPoint(p.x + x2, p.y +y2);
 				//float ang= atan((p.y+y2)/(p.x+x2))*180 / CV_PI;
 				//CvPoint dir = cv::Point(p.x+(5* cos(ang)), p.y+(5 * sin(ang))); // calculate direction
-				CvPoint dir = cv::Point(p.x+(x2*ratio), p.y+(y2*ratio)); // calculate direction
+				CvPoint dir = cv::Point(p.x+x2*abs(med), p.y+y2*abs(med)); // calculate direction
 				//if (isnan(ang)){
 				//	continue;
 				//}

@@ -137,7 +137,7 @@ void LKanade::pintaVector(cv::Mat* img_a){
 
 	double minh, maxh;
 	Scalar medsc=mean(this->M);
-	float med=log(medsc.val[0]*log(this->step));
+	float med=log(medsc.val[0]);
 	cv::minMaxLoc(this->M, &minh, &maxh);
 	//float mlog =log(maxh);
 

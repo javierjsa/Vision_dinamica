@@ -39,6 +39,7 @@ void LKanadePinv::Calcula_UV(cv::Mat* img_t, cv::Mat* img_t1){
 		float* _Ix2i=this->Ix2i.ptr<float>(i);
 		float* _U=this->U.ptr<float>(i);
 		float* _V=this->V.ptr<float>(i);
+		float* _M=this->M.ptr<float>(i);
 
 		for (int j=this->vecindad;j<=(c-this->vecindad);j=j+this->step){
 
@@ -59,8 +60,7 @@ void LKanadePinv::Calcula_UV(cv::Mat* img_t, cv::Mat* img_t1){
 			_U[j]=_UV[0];
 			_V[j]=_UV[1];
 
-			//_U[j]=UV.at<float>(0,0);
-			//_V[j]=UV.at<float>(1,0);
+			_M[j]= sqrt(_U[j]*_U[j] + _V[j]*_V[j]);
 
 		}
 	}

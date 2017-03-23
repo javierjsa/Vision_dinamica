@@ -88,8 +88,8 @@ int main(int argc, char** argv) {
 	img_c.convertTo(img_c, D_TYPE, 1.f/255);
 	img_d.convertTo(img_d, D_TYPE, 1.f/255);
 
-	//LKanade b = LKanade(win,step,&img_c,&img_d);
-	LKanadePinv b = LKanadePinv(win,step,&img_c,&img_d);
+	LKanade b = LKanade(win,step,&img_c,&img_d);
+	//LKanadePinv b = LKanadePinv(win,step,&img_c,&img_d);
 
 		while(true){
 

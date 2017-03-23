@@ -30,13 +30,13 @@ LKanade::LKanade(int vecindad,int step,cv::Mat* img_t, cv::Mat* img_t1):Calculaf
 	this->V= Mat::zeros(r,c,D_TYPE); // componente V
 	this->M= Mat::zeros(r,c,D_TYPE); // Modulos
 
+
 }
 
 void LKanade::Calcula_UV(cv::Mat* img_t, cv::Mat* img_t1){
 
 	this->img_t=img_t;
 	this->img_t1=img_t1;
-
 
 	int c=(this->img_t)->cols;
 	int r=(this->img_t)->rows;
@@ -48,7 +48,6 @@ void LKanade::Calcula_UV(cv::Mat* img_t, cv::Mat* img_t1){
 
 	//calculo de U,V
 
-	//#pragma omp parallel for schedule(static)
 	#pragma omp parallel for schedule(static,1)
 	for (int i=this->vecindad;i<=(r-this->vecindad);i=i+this->step){
 
@@ -59,6 +58,7 @@ void LKanade::Calcula_UV(cv::Mat* img_t, cv::Mat* img_t1){
 		float* _e=this->Ix2i.ptr<float>(i);
 		float* _U=this->U.ptr<float>(i);
 		float* _V=this->V.ptr<float>(i);
+		float* _M=this->M.ptr<float>(i);
 
 		for (int j=this->vecindad;j<=(c-this->vecindad);j=j+this->step){
 
@@ -82,6 +82,9 @@ void LKanade::Calcula_UV(cv::Mat* img_t, cv::Mat* img_t1){
 			} else {
 				_V[j]=(c*d-e*d)/(e*a-c*c);
 			}
+
+			_M[j]= sqrt(_U[j]*_U[j] + _V[j]*_V[j]);
+
 		}
 	}
 }
@@ -131,29 +134,48 @@ void LKanade::Calcula_sumatorios(){
 void LKanade::pintaVector(cv::Mat* img_a){
 	int c=(img_a)->cols;
 	int r=(img_a)->rows;
+
+	double minh, maxh;
+	cv::minMaxLoc(this->M, &minh, &maxh);
+
+
+	//Mat cM,cMU8;
+	//this->M.convertTo(cMU8, CV_8UC1);
+	//applyColorMap(cMU8, cM, COLORMAP_JET);
+
+
+	//float mean= (float)(max+min)/2;
+
 	#pragma omp parallel for schedule(static,1)
 	for (int i=this->vecindad;i<=(r-this->vecindad);i=i+this->step){ //filas, o sea,y
 
 		float* _U=this->U.ptr<float>(i);
 		float* _V=this->V.ptr<float>(i);
+		float* _M=this->M.ptr<float>(i);
+		//float* _cM=cM.ptr<float>(i);
 
 		for (int j=this->vecindad;j<=(c-this->vecindad);j=j+this->step){ //columnas, o sea, x
 
 			CvPoint p = cvPoint(j,i);
-			float modulo = sqrt(_U[j]*_U[j] + _V[j]*_V[j]); //at(fila,columna)
-			float x2=_U[j];
-			float y2=_V[j];
-			if (modulo>0){
+			float modulo = _M[j]; //at(fila,columna)
 
+
+			if (modulo>0){
+				float x2=_U[j];
+				float y2=_V[j];
+				float max = (abs(x2) > abs(y2)) ? abs(x2) : abs(y2);
+				float ratio = (this->step/2)/max;
+				int hue=(int)((modulo-minh)*255)/(maxh-minh);
 				//CvPoint p2 = cvPoint(p.x + x2, p.y +y2);
 				//float ang= atan((p.y+y2)/(p.x+x2))*180 / CV_PI;
 				//CvPoint dir = cv::Point(p.x+(5* cos(ang)), p.y+(5 * sin(ang))); // calculate direction
-				CvPoint dir = cv::Point(p.x+(x2), p.y+(y2)); // calculate direction
+				CvPoint dir = cv::Point(p.x+(x2*ratio), p.y+(y2*ratio)); // calculate direction
 				//if (isnan(ang)){
 				//	continue;
 				//}
+			    //cv::arrowedLine(*img_a, p,dir, , 1,  CV_AA, 0, 0.5);
 
-			    cv::arrowedLine(*img_a, p,dir, CV_RGB(0,255,0), 1,  CV_AA, 0, 0.5);
+				cv::arrowedLine(*img_a, p,dir, CV_RGB(hue,0,0), 1,  CV_AA, 0, 0.5);
 			}
 		}
 	}

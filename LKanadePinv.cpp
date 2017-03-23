@@ -7,7 +7,7 @@
 
 #include "LKanadePinv.h"
 
-LKanadePinv::LKanadePinv(int vecindad,cv::Mat* img_t, cv::Mat* img_t1):LKanade(vecindad,img_t, img_t1) {
+LKanadePinv::LKanadePinv(int vecindad,int step,cv::Mat* img_t, cv::Mat* img_t1):LKanade(vecindad,step,img_t, img_t1) {
 
 	int c=(this->img_t)->cols;
 	int r=(this->img_t)->rows;
@@ -30,7 +30,7 @@ void LKanadePinv::Calcula_UV(cv::Mat* img_t, cv::Mat* img_t1){
 	this->Calcula_sumatorios();
 
 	#pragma omp parallel for schedule(static,1)
-	for (int i=this->vecindad;i<=(r-this->vecindad);i=i+5){
+	for (int i=this->vecindad;i<=(r-this->vecindad);i=i+this->step){
 
 		float* _Iy2i=this->Iy2i.ptr<float>(i);
 		float* _IxiIti=this->IxiIti.ptr<float>(i);
@@ -40,7 +40,7 @@ void LKanadePinv::Calcula_UV(cv::Mat* img_t, cv::Mat* img_t1){
 		float* _U=this->U.ptr<float>(i);
 		float* _V=this->V.ptr<float>(i);
 
-		for (int j=this->vecindad;j<=(c-this->vecindad);j=j+5){
+		for (int j=this->vecindad;j<=(c-this->vecindad);j=j+this->step){
 
 			float a=_Iy2i[j];
 			float b=_IxiIti[j];

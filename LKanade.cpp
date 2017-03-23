@@ -10,9 +10,10 @@
 
 #define D_TYPE CV_32F
 
-LKanade::LKanade(int vecindad,cv::Mat* img_t, cv::Mat* img_t1):Calculaflujos(img_t,img_t1) {
+LKanade::LKanade(int vecindad,int step,cv::Mat* img_t, cv::Mat* img_t1):Calculaflujos(img_t,img_t1) {
 
 	this->vecindad=vecindad;
+	this->step=step;
 	int c=(this->img_t)->cols;
 	int r=(this->img_t)->rows;
 
@@ -49,7 +50,7 @@ void LKanade::Calcula_UV(cv::Mat* img_t, cv::Mat* img_t1){
 
 	//#pragma omp parallel for schedule(static)
 	#pragma omp parallel for schedule(static,1)
-	for (int i=this->vecindad;i<=(r-this->vecindad);i++){
+	for (int i=this->vecindad;i<=(r-this->vecindad);i=i+this->step){
 
 		float* _a=(this->Iy2i).ptr<float>(i);
 		float* _b=(this->IxiIti).ptr<float>(i);
@@ -59,7 +60,7 @@ void LKanade::Calcula_UV(cv::Mat* img_t, cv::Mat* img_t1){
 		float* _U=this->U.ptr<float>(i);
 		float* _V=this->V.ptr<float>(i);
 
-		for (int j=this->vecindad;j<=(c-this->vecindad);j++){
+		for (int j=this->vecindad;j<=(c-this->vecindad);j=j+this->step){
 
 			float a=_a[j];
 			float b=_b[j];
@@ -92,7 +93,7 @@ void LKanade::Calcula_sumatorios(){
 
 	//calculo sumatorios
     #pragma omp parallel for schedule(static,1)
-	for (int i=this->vecindad;i<=(r-this->vecindad);i=i+5){
+	for (int i=this->vecindad;i<=(r-this->vecindad);i=i+this->step){
 
 		float* _Ixi = this->Ixi.ptr<float>(i);
 		float* _Iyi = this->Iyi.ptr<float>(i);
@@ -103,7 +104,7 @@ void LKanade::Calcula_sumatorios(){
 		float* _IyiIti = this->IyiIti.ptr<float>(i);
 		float* _IyiIxi = this->IyiIxi.ptr<float>(i);
 
-		for (int j=this->vecindad;j<=(c-this->vecindad);j=j+5){
+		for (int j=this->vecindad;j<=(c-this->vecindad);j=j+this->step){
 			for (int swi=(i-this->vecindad);swi<=(i+this->vecindad);swi++){
 
 				float* _Ix=this->Ix.ptr<float>(swi);
@@ -131,12 +132,12 @@ void LKanade::pintaVector(cv::Mat* img_a){
 	int c=(img_a)->cols;
 	int r=(img_a)->rows;
 	#pragma omp parallel for schedule(static,1)
-	for (int i=this->vecindad;i<=(r-this->vecindad);i=i+5){ //filas, o sea,y
+	for (int i=this->vecindad;i<=(r-this->vecindad);i=i+this->step){ //filas, o sea,y
 
 		float* _U=this->U.ptr<float>(i);
 		float* _V=this->V.ptr<float>(i);
 
-		for (int j=this->vecindad;j<=(c-this->vecindad);j=j+5){ //columnas, o sea, x
+		for (int j=this->vecindad;j<=(c-this->vecindad);j=j+this->step){ //columnas, o sea, x
 
 			CvPoint p = cvPoint(j,i);
 			float modulo = sqrt(_U[j]*_U[j] + _V[j]*_V[j]); //at(fila,columna)

@@ -14,6 +14,7 @@ class LKanade: public Calculaflujos {
 
 protected:
 	int vecindad;
+	int step;
 	Mat Ixi;
 	Mat Iyi;
 	Mat Ix2i;
@@ -29,7 +30,7 @@ protected:
 
 
 public:
-	LKanade(int vecindad,cv::Mat* img_t, cv::Mat* img_t1);
+	LKanade(int vecindad,int step,cv::Mat* img_t, cv::Mat* img_t1);
 
 	virtual void Calcula_UV(cv::Mat* img_t, cv::Mat* img_t1);
 

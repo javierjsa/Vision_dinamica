@@ -53,9 +53,26 @@ int main(int argc, char** argv) {
 
 	if (!outputVideo.isOpened())
 		{
-			cout  << "Could not open the output video for write: " << argv[1] << endl;
+			cout  << "No se puede salvar vídeo: " << argv[1] << endl;
 			return -1;
 		}
+
+	int step=5;
+	int win=40;
+
+	if (argc==4){
+
+		win= atoi(argv[3]);
+		cout<<win;
+	}
+
+	if (argc==5){
+
+		win= atoi(argv[3]);
+		step= atoi(argv[4]);
+	}
+
+
 
 	cout<<"\n";
 
@@ -71,8 +88,8 @@ int main(int argc, char** argv) {
 	img_c.convertTo(img_c, D_TYPE, 1.f/255);
 	img_d.convertTo(img_d, D_TYPE, 1.f/255);
 
-	LKanade b = LKanade(20,&img_c,&img_d);
-	//LKanadePinv b = LKanadePinv(40,&img_c,&img_d);
+	//LKanade b = LKanade(win,step,&img_c,&img_d);
+	LKanadePinv b = LKanadePinv(win,step,&img_c,&img_d);
 
 		while(true){
 

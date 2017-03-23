@@ -17,8 +17,9 @@ protected:
 	Mat matrix;
 	Mat UV;
 
+
 public:
-	LKanadePinv(int vecindad,cv::Mat* img_t, cv::Mat* img_t1);
+	LKanadePinv(int vecindad,int step,cv::Mat* img_t, cv::Mat* img_t1);
 	void Calcula_UV(cv::Mat* img_t, cv::Mat* img_t1);
 	virtual ~LKanadePinv();
 };

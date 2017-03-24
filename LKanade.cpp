@@ -35,6 +35,7 @@ LKanade::LKanade(int vecindad,int step,cv::Mat* img_t, cv::Mat* img_t1):Calculaf
 
 void LKanade::Calcula_UV(cv::Mat* img_t, cv::Mat* img_t1){
 
+
 	this->img_t=img_t;
 	this->img_t1=img_t1;
 
@@ -137,7 +138,7 @@ void LKanade::pintaVector(cv::Mat* img_a){
 
 	double minh, maxh;
 	Scalar medsc=mean(this->M);
-	float med=log(medsc.val[0]);
+	float med=log(medsc.val[0])*log(this->step);
 	cv::minMaxLoc(this->M, &minh, &maxh);
 	//float mlog =log(maxh);
 
@@ -169,15 +170,24 @@ void LKanade::pintaVector(cv::Mat* img_a){
 				float ratio = (this->step)/max;
 				int hue=(int)((modulo-minh)*255)/(maxh-minh);
 				//CvPoint p2 = cvPoint(p.x + x2, p.y +y2);
-				//float ang= atan((p.y+y2)/(p.x+x2))*180 / CV_PI;
+				float ang= atan((p.y+y2)/(p.x+x2))*180 / CV_PI;
+				int hue2=(int)((ang)*255)/(360);
 				//CvPoint dir = cv::Point(p.x+(5* cos(ang)), p.y+(5 * sin(ang))); // calculate direction
-				CvPoint dir = cv::Point(p.x+x2*abs(med), p.y+y2*abs(med)); // calculate direction
+				Point dir;
+				if ((this->step)>4){
+					dir = Point(p.x+x2*abs(med), p.y+y2*abs(med)); // calculate direction
+					cv::arrowedLine(*img_a, p,dir, CV_RGB(0,hue,0), 1,  CV_AA, 0, 0.5);
+				}else if (hue>10) {
+					dir = Point(p.x+x2/log(maxh), p.y+y2/log(maxh));
+					circle(*img_a,p, this->step, CV_RGB(0,hue,0), 1, 8, 0);
+				}
+
 				//if (isnan(ang)){
 				//	continue;
 				//}
 			    //cv::arrowedLine(*img_a, p,dir, , 1,  CV_AA, 0, 0.5);
 
-				cv::arrowedLine(*img_a, p,dir, CV_RGB(hue,0,0), 1,  CV_AA, 0, 0.5);
+
 			}
 		}
 	}

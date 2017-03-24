@@ -33,15 +33,18 @@ private:
 	Mat It;
 	Mat U0;
 	Mat V0;
-	Mat U;
-	Mat V;
 	Mat M;
 
+	int step;
+
+	void Clean();
+	void Calcula_gradiente(cv::Mat* img_t);
+	bool Calcula_UV(float margen,cv::Mat* img_t);
 
 public:
-	HShunck(int vecindad,float landa,cv::Mat* img_t);
-	void Calcula_gradiente();
-	void Iterar(int iteraciones, float margen,cv::Mat* img_t);
+	HShunck(int vecindad,int step,float landa,cv::Mat* img_t);
+	void Iterar(int iteraciones,float margen,cv::Mat* img_t);
+	void pintaVector(cv::Mat* img_a);
 	virtual ~HShunck();
 };
 

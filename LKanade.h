@@ -34,6 +34,8 @@ public:
 
 	virtual void Calcula_UV(cv::Mat* img_t, cv::Mat* img_t1);
 
+	virtual void Clean();
+
 	void Calcula_sumatorios();
 
 	virtual void pintaVector(cv::Mat* img_a);

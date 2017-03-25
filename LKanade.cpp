@@ -33,6 +33,24 @@ LKanade::LKanade(int vecindad,int step,cv::Mat* img_t, cv::Mat* img_t1):Calculaf
 
 }
 
+void LKanade::Clean(){
+
+	int c=(this->img_t)->cols;
+	int r=(this->img_t)->rows;
+
+	this->Ixi= Mat::zeros(r,c,D_TYPE); //Sumatorio Ix
+	this->Iyi= Mat::zeros(r,c,D_TYPE); // Sumatorio Iy
+	this->Ix2i= Mat::zeros(r,c,D_TYPE); // Sumatorio Ix al cuadrado
+	this->Iy2i= Mat::zeros(r,c,D_TYPE); // Sumatorio Iy al cuadrado
+	this->Iti= Mat::zeros(r,c,D_TYPE);  // Sumatorio It
+	this->IxiIti= Mat::zeros(r,c,D_TYPE); //Sumatorio Ixi* Iti
+	this->IyiIti= Mat::zeros(r,c,D_TYPE); //Sumatorio  Iyi* Iti
+	this->Ix2iIy2i= Mat::zeros(r,c,D_TYPE); // Sumatior Ix cuadrado * Iy cuadrado
+	this->IyiIxi = Mat::zeros(r,c,D_TYPE);
+
+}
+
+
 void LKanade::Calcula_UV(cv::Mat* img_t, cv::Mat* img_t1){
 
 
@@ -41,6 +59,8 @@ void LKanade::Calcula_UV(cv::Mat* img_t, cv::Mat* img_t1){
 
 	int c=(this->img_t)->cols;
 	int r=(this->img_t)->rows;
+
+	this->Clean();
 
 	this->Calcula_gradiente();
 

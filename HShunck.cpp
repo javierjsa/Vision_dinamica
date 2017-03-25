@@ -7,6 +7,9 @@
 
 #include "HShunck.h"
 
+
+#define D_TYPE CV_32F
+
 HShunck::HShunck(int vecindad,int step,float landa,cv::Mat* img_t){
 
 	this->img_t=img_t;
@@ -48,6 +51,17 @@ void HShunck::Clean(){
 	this->Umean=Mat::zeros(r,c,CV_32F);
 	this->Vmean=Mat::zeros(r,c,CV_32F);
 
+	this->Uact=Mat::zeros(r,c,CV_32F);
+	this->Vact=Mat::zeros(r,c,CV_32F);
+
+	this->Uact=Scalar(0.0001);
+	this->Vact=Scalar(0.0001);
+
+	this->Umean=Mat::zeros(r,c,CV_32F);
+	this->Vmean=Mat::zeros(r,c,CV_32F);
+
+
+
 }
 
 void HShunck::Calcula_gradiente(cv::Mat* img_t){
@@ -59,17 +73,12 @@ void HShunck::Calcula_gradiente(cv::Mat* img_t){
 
 		GaussianBlur(*(this->img_t),this->It,Size(kernel_size,kernel_size),0,0,BORDER_DEFAULT);
 
+
 		Mat kernelx = (Mat_<float>(1,3)<<-0.5, 0, 0.5);
 		Mat kernely = (Mat_<float>(3,1)<<-0.5, 0, 0.5);
 
 		filter2D(this->It, this->Ix, -1, kernelx);
 		filter2D(this->It, this->Iy, -1, kernely);
-
-		/*Sobel(*this->img_t, this->Ixt, D_TYPE, 1, 0, 3);
-		Sobel(*this->img_t, this->Iyt, D_TYPE, 0, 1, 3);
-
-		Sobel(this->I2t1, this->Ixt1, D_TYPE, 1, 0, 3);
-		Sobel(this->I2t1, this->Iyt1, D_TYPE, 0, 1, 3);*/
 
 		this->Ix2=this->Ix.mul(this->Ix);
 		this->Iy2=this->Iy.mul(this->Iy);
@@ -78,12 +87,15 @@ void HShunck::Calcula_gradiente(cv::Mat* img_t){
 
 
 void HShunck::Iterar(int iteraciones,float margen,Mat* img_t){
-
+	cerr<<"\n-------------\n";
 	int it=0;
+	this->Clean();
 	while (it<=iteraciones){
+		cerr<<it<<",";
 		bool conv=this->Calcula_UV(margen,img_t);
 		if (conv)
 			break;
+		it++;
 	}
 
 }
@@ -91,7 +103,7 @@ void HShunck::Iterar(int iteraciones,float margen,Mat* img_t){
 
 bool HShunck::Calcula_UV(float margen,cv::Mat* img_t){
 
-	this->Clean();
+
 	this->Calcula_gradiente(img_t);
 
 	this->Uant=this->Uact.clone();
@@ -144,9 +156,15 @@ bool HShunck::Calcula_UV(float margen,cv::Mat* img_t){
 			float num = (_Ix[j]*_Umean[j] + _Iy[j]*_Vmean[j]+_It[j]);
 			float den = this->landa*this->landa+_Ix2[j]+_Iy2[j];
 
+			//if (abs(den)<0.0001)
+			//	cerr<<"error\n";
+
 			_Uact[j]=_Umean[j] - _Ix[j]*(num/den);
 			_Vact[j]=_Vmean[j] - _Iy[j]*(num/den);
 			_M[j]=sqrt(_Uact[j]*_Uact[j]+_Vact[j]*_Vact[j]);
+
+
+
 		}
 	}
 	//Calcular convergencia
@@ -201,10 +219,11 @@ void HShunck::pintaVector(cv::Mat* img_a){
 				int hue2=(int)((ang)*255)/(360);
 				//CvPoint dir = cv::Point(p.x+(5* cos(ang)), p.y+(5 * sin(ang))); // calculate direction
 				Point dir;
-				if ((this->step)>4){
-					dir = Point(p.x+x2*abs(med), p.y+y2*abs(med)); // calculate direction
+				if ((this->step)>4 and hue>5){
+					//dir = Point(p.x+x2*abs(med), p.y+y2*abs(med)); // calculate direction
+					dir = Point(p.x+x2*ratio, p.y+y2*ratio); // calculate direction
 					cv::arrowedLine(*img_a, p,dir, CV_RGB(0,hue,0), 1,  CV_AA, 0, 0.5);
-				}else if (hue>10) {
+				}else if (hue>5) {
 					dir = Point(p.x+x2/log(maxh), p.y+y2/log(maxh));
 					circle(*img_a,p, this->step, CV_RGB(0,hue,0), 1, 8, 0);
 				}
@@ -224,36 +243,7 @@ void HShunck::pintaVector(cv::Mat* img_a){
 
 
 
-//probablemente no hace falta
-/*
-void HShunck::Calcula_sumatorios(){
 
-	int c=(this->img_t)->cols;
-	int r=(this->img_t)->rows;
-
-	//calculo sumatorios
-	#pragma omp parallel for simd collapse (2)
-	for (int i=this->vecindad;i<=(r-this->vecindad);i++){
-		for (int j=this->vecindad;j<=(c-this->vecindad);j++){
-			//float pixel = this->Ixi.at<float>(i,j);
-
-			for (int swi=(i-this->vecindad);swi<=(i+this->vecindad);swi++){
-				for (int swj=(j-this->vecindad);swj<=(j+this->vecindad);swj++){
-
-					this->Ixi.at<float>(i,j)+=this->Ix.at<float>(swi,swj);
-					this->Iyi.at<float>(i,j)+=this->Iy.at<float>(swi,swj);
-					this->Ix2i.at<float>(i,j)+=(this->Ix.at<float>(swi,swj))*(this->Ix.at<float>(swi,swj));
-					this->Iy2i.at<float>(i,j)+=(this->Iy.at<float>(swi,swj))*(this->Iy.at<float>(swi,swj));
-					this->Iti.at<float>(i,j)+=this->It.at<float>(swi,swj);
-					this->IxiIti.at<float>(i,j)+=(this->Ix.at<float>(swi,swj))*(this->It.at<float>(swi,swj));
-					this->IyiIti.at<float>(i,j)+=(this->Iy.at<float>(swi,swj))*(this->It.at<float>(swi,swj));
-					this->IyiIxi.at<float>(i,j)+=(this->Iy.at<float>(swi,swj))*(this->Ix.at<float>(swi,swj));
-				}
-			}
-		}
-	}
-
-}*/
 HShunck::~HShunck() {
 	// TODO Auto-generated destructor stub
 }

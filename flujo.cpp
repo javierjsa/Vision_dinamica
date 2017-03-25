@@ -59,6 +59,8 @@ int main(int argc, char** argv) {
 
 	int step=5;
 	int win=40;
+	int landa=3;
+	int iteraciones=10;
 
 	if (argc==4){
 
@@ -72,6 +74,21 @@ int main(int argc, char** argv) {
 		step= atoi(argv[4]);
 	}
 
+	if (argc==6){
+
+		win= atoi(argv[3]);
+		step= atoi(argv[4]);
+		landa=atoi(argv[5]);
+	}
+
+	if (argc==7){
+
+		win= atoi(argv[3]);
+		step= atoi(argv[4]);
+		landa=atoi(argv[5]);
+		iteraciones=atoi(argv[6]);
+		}
+
 
 
 	cout<<"\n";
@@ -79,38 +96,39 @@ int main(int argc, char** argv) {
 	Mat img_c;
 	Mat img_d;
 
-	cap>>img_a;
+	//cap>>img_a;
 	cap>>img_b;
 
-	cvtColor(img_a,img_c,CV_RGB2GRAY,0);
+	//cvtColor(img_a,img_c,CV_RGB2GRAY,0);
 	cvtColor(img_b,img_d,CV_RGB2GRAY,0);
 
-	img_c.convertTo(img_c, D_TYPE, 1.f/255);
+	//img_c.convertTo(img_c, D_TYPE, 1.f/255);
 	img_d.convertTo(img_d, D_TYPE, 1.f/255);
 
 	//LKanade b = LKanade(win,step,&img_c,&img_d);
-	LKanadePinv b = LKanadePinv(win,step,&img_c,&img_d);
-
+	//LKanadePinv b = LKanadePinv(win,step,&img_c,&img_d);
+	HShunck b = HShunck(win,step,landa,&img_d);
 		while(true){
 
 			if (img_b.empty()) break;
 
 			cerr<<".";
 
-			b.Calcula_UV(&img_c,&img_d);
-			b.pintaVector(&img_a);
+			//b.Calcula_UV(&img_c,&img_d);
+			b.Iterar(iteraciones,-1,&img_d);
+			//b.pintaVector(&img_a);
 			b.pintaVector(&img_b);
 
-			outputVideo<<img_a;
+			//outputVideo<<img_a;
 			outputVideo<<img_b;
 
-			cap>>img_a;
+			//cap>>img_a;
 			cap>>img_b;
 
-			cvtColor(img_a,img_c,CV_RGB2GRAY,0);
+			//cvtColor(img_a,img_c,CV_RGB2GRAY,0);
 			cvtColor(img_b,img_d,CV_RGB2GRAY,0);
 
-			img_c.convertTo(img_c, D_TYPE, 1.f/255);
+			//img_c.convertTo(img_c, D_TYPE, 1.f/255);
 			img_d.convertTo(img_d, D_TYPE, 1.f/255);
 
 		}

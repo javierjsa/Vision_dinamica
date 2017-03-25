@@ -28,15 +28,14 @@ protected:
 	Mat V;
 	Mat M;
 
+	virtual void Clean();
+
+	void Calcula_sumatorios();
 
 public:
 	LKanade(int vecindad,int step,cv::Mat* img_t, cv::Mat* img_t1);
 
 	virtual void Calcula_UV(cv::Mat* img_t, cv::Mat* img_t1);
-
-	virtual void Clean();
-
-	void Calcula_sumatorios();
 
 	virtual void pintaVector(cv::Mat* img_a);
 

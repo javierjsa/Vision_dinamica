@@ -40,13 +40,12 @@ protected:
 	Mat  I2t1; // Suavizado t+1
 	Mat  It; // Suavizado
 
-
+	virtual void Calcula_gradiente();
 
 public:
 
 	Calculaflujos(cv::Mat* img_t, cv::Mat* img_t1);
 
-	virtual void Calcula_gradiente();
 
 	virtual ~Calculaflujos();
 

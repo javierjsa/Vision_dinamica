@@ -7,6 +7,8 @@
 
 #include "LKanadePinv.h"
 
+#define D_TYPE CV_32F
+
 LKanadePinv::LKanadePinv(int vecindad,int step,cv::Mat* img_t, cv::Mat* img_t1):LKanade(vecindad,step,img_t, img_t1) {
 
 	int c=(this->img_t)->cols;
@@ -23,6 +25,8 @@ void LKanadePinv::Calcula_UV(cv::Mat* img_t, cv::Mat* img_t1){
 
 	int c=(this->img_t)->cols;
 	int r=(this->img_t)->rows;
+
+	this->Clean();
 
 	this->Calcula_gradiente();
 

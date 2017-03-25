@@ -15,7 +15,7 @@
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include "opencv2/videoio.hpp"
-
+#include <ctime>
 #endif
 
 
@@ -108,6 +108,8 @@ int main(int argc, char** argv) {
 	LKanade b = LKanade(win,step,&img_c,&img_d);
 	//LKanadePinv b = LKanadePinv(win,step,&img_c,&img_d);
 	//HShunck b = HShunck(win,step,landa,&img_d);
+		int frames=0;
+		clock_t begin = clock();
 		while(true){
 
 			if (img_b.empty()) break;
@@ -133,8 +135,12 @@ int main(int argc, char** argv) {
 			img_c.convertTo(img_c, D_TYPE, 1.f/255);
 			img_d.convertTo(img_d, D_TYPE, 1.f/255);
 
+			frames++;
 		}
-
+		clock_t end = clock();
+		double segundos = double(end - begin) / CLOCKS_PER_SEC;
+		float fps =frames/segundos;
+		cout<<"Tiempo:"<<segundos<<", Frames:"<<frames<<", FPS:"<<fps;
 	cout<<"\n";
 	return 0;
 }

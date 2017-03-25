@@ -38,12 +38,12 @@ private:
 	int step;
 
 	void Clean();
-	void Calcula_gradiente(cv::Mat* img_t);
-	bool Calcula_UV(float margen,cv::Mat* img_t);
+	void Calcula_gradiente(cv::Mat* img_t, cv::Mat* img_t1);
+	bool Aux_UV(float margen,cv::Mat* img_t,cv::Mat* img_t1);
 
 public:
 	HShunck(int vecindad,int step,float landa,cv::Mat* img_t);
-	void Iterar(int iteraciones,float margen,cv::Mat* img_t);
+	void Calcula_UV(int iteraciones,float margen,cv::Mat* img_t,cv::Mat* img_t1);
 	void pintaVector(cv::Mat* img_a);
 	virtual ~HShunck();
 };

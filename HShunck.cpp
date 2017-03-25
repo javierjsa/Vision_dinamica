@@ -14,6 +14,7 @@ HShunck::HShunck(int vecindad,int step,float landa,cv::Mat* img_t){
 
 	this->img_t=img_t;
 
+
 	int c=(this->img_t)->cols;
 	int r=(this->img_t)->rows;
 
@@ -64,21 +65,25 @@ void HShunck::Clean(){
 
 }
 
-void HShunck::Calcula_gradiente(cv::Mat* img_t){
+void HShunck::Calcula_gradiente(cv::Mat* img_t,cv::Mat* img_t1){
 
 
 		this->img_t=img_t;
 
 		int kernel_size = 41;
 
-		GaussianBlur(*(this->img_t),this->It,Size(kernel_size,kernel_size),0,0,BORDER_DEFAULT);
+		Mat I2t,I2t1;
 
+		GaussianBlur(*(this->img_t),I2t,Size(kernel_size,kernel_size),0,0,BORDER_DEFAULT);
+		GaussianBlur(*img_t1,I2t1,Size(kernel_size,kernel_size),0,0,BORDER_DEFAULT);
+
+		this->It=I2t1-I2t;
 
 		Mat kernelx = (Mat_<float>(1,3)<<-0.5, 0, 0.5);
 		Mat kernely = (Mat_<float>(3,1)<<-0.5, 0, 0.5);
 
-		filter2D(this->It, this->Ix, -1, kernelx);
-		filter2D(this->It, this->Iy, -1, kernely);
+		filter2D(I2t, this->Ix, -1, kernelx);
+		filter2D(I2t, this->Iy, -1, kernely);
 
 		this->Ix2=this->Ix.mul(this->Ix);
 		this->Iy2=this->Iy.mul(this->Iy);
@@ -86,13 +91,13 @@ void HShunck::Calcula_gradiente(cv::Mat* img_t){
 }
 
 
-void HShunck::Iterar(int iteraciones,float margen,Mat* img_t){
-	cerr<<"\n-------------\n";
+void HShunck::Calcula_UV(int iteraciones,float margen,Mat* img_t,cv::Mat* img_t1){
+
 	int it=0;
 	this->Clean();
+	this->Calcula_gradiente(img_t,img_t1);
 	while (it<=iteraciones){
-		cerr<<it<<",";
-		bool conv=this->Calcula_UV(margen,img_t);
+		bool conv=this->Aux_UV(margen,img_t,img_t1);
 		if (conv)
 			break;
 		it++;
@@ -101,10 +106,8 @@ void HShunck::Iterar(int iteraciones,float margen,Mat* img_t){
 }
 
 
-bool HShunck::Calcula_UV(float margen,cv::Mat* img_t){
+bool HShunck::Aux_UV(float margen,cv::Mat* img_t,cv::Mat* img_t1){
 
-
-	this->Calcula_gradiente(img_t);
 
 	this->Uant=this->Uact.clone();
 	this->Vant=this->Vact.clone();
@@ -208,7 +211,7 @@ void HShunck::pintaVector(cv::Mat* img_a){
 			float modulo = _M[j]; //at(fila,columna)
 
 
-			if (modulo>0){
+			if (modulo>1){
 				float x2=_Uact[j];
 				float y2=_Vact[j];
 				float max = (abs(x2) > abs(y2)) ? abs(x2) : abs(y2);
@@ -220,6 +223,7 @@ void HShunck::pintaVector(cv::Mat* img_a){
 				//CvPoint dir = cv::Point(p.x+(5* cos(ang)), p.y+(5 * sin(ang))); // calculate direction
 				Point dir;
 				if ((this->step)>4 and hue>5){
+					//dir = Point(p.x+x2, p.y+y2); // calculate direction
 					//dir = Point(p.x+x2*abs(med), p.y+y2*abs(med)); // calculate direction
 					dir = Point(p.x+x2*ratio, p.y+y2*ratio); // calculate direction
 					cv::arrowedLine(*img_a, p,dir, CV_RGB(0,hue,0), 1,  CV_AA, 0, 0.5);

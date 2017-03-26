@@ -10,10 +10,10 @@
 
 #define D_TYPE CV_32F
 
-HShunck::HShunck(int vecindad,int step,float landa,cv::Mat* img_t){
+HShunck::HShunck(int vecindad,int step,float landa,cv::Mat* img_t,cv::Mat* img_t1){
 
 	this->img_t=img_t;
-
+	this->img_t1=img_t1;
 
 	int c=(this->img_t)->cols;
 	int r=(this->img_t)->rows;
@@ -67,12 +67,14 @@ void HShunck::Clean(){
 
 void HShunck::Calcula_gradiente(cv::Mat* img_t,cv::Mat* img_t1){
 
+		Mat I2t,I2t1,Ixt,Iyt,Ixt1,Iyt1;
 
 		this->img_t=img_t;
+		this->img_t1=img_t1;
 
 		int kernel_size = 41;
 
-		Mat I2t,I2t1;
+
 
 		GaussianBlur(*(this->img_t),I2t,Size(kernel_size,kernel_size),0,0,BORDER_DEFAULT);
 		GaussianBlur(*img_t1,I2t1,Size(kernel_size,kernel_size),0,0,BORDER_DEFAULT);
@@ -87,6 +89,33 @@ void HShunck::Calcula_gradiente(cv::Mat* img_t,cv::Mat* img_t1){
 
 		this->Ix2=this->Ix.mul(this->Ix);
 		this->Iy2=this->Iy.mul(this->Iy);
+		/*
+		int kernel_size = 41;
+
+		GaussianBlur(*(this->img_t),I2t,Size(kernel_size,kernel_size),0,0,BORDER_DEFAULT);
+		GaussianBlur(*(this->img_t1),I2t1,Size(kernel_size,kernel_size),0,0,BORDER_DEFAULT);
+
+		this->It=(I2t1)-(I2t);
+
+		Mat kernelx = (Mat_<float>(1,3)<<-0.5, 0, 0.5);
+		Mat kernely = (Mat_<float>(3,1)<<-0.5, 0, 0.5);
+
+		filter2D(I2t, Ixt, -1, kernelx);
+		filter2D(I2t, Iyt, -1, kernely);
+
+		filter2D(I2t1, Ixt1, -1, kernelx);
+		filter2D(I2t1, Iyt1, -1, kernely);
+
+		/*Sobel(*this->img_t, this->Ixt, D_TYPE, 1, 0, 3);
+		Sobel(*this->img_t, this->Iyt, D_TYPE, 0, 1, 3);
+
+		Sobel(this->I2t1, this->Ixt1, D_TYPE, 1, 0, 3);
+		Sobel(this->I2t1, this->Iyt1, D_TYPE, 0, 1, 3);
+
+		this->Ix=(Ixt+Ixt1)/2;
+		this->Iy=(Iyt+Iyt1)/2;
+		*/
+
 
 }
 
@@ -222,7 +251,7 @@ void HShunck::pintaVector(cv::Mat* img_a){
 				int hue2=(int)((ang)*255)/(360);
 				//CvPoint dir = cv::Point(p.x+(5* cos(ang)), p.y+(5 * sin(ang))); // calculate direction
 				Point dir;
-				if ((this->step)>4 and hue>5){
+				if ((this->step)>4){
 					//dir = Point(p.x+x2, p.y+y2); // calculate direction
 					//dir = Point(p.x+x2*abs(med), p.y+y2*abs(med)); // calculate direction
 					dir = Point(p.x+x2*ratio, p.y+y2*ratio); // calculate direction

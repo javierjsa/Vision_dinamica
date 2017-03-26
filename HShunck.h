@@ -26,6 +26,7 @@ private:
 	Mat Vmean;
 
 	Mat* img_t;
+	Mat* img_t1;
 	Mat Ix;
 	Mat Iy;
 	Mat Ix2;
@@ -42,7 +43,7 @@ private:
 	bool Aux_UV(float margen,cv::Mat* img_t,cv::Mat* img_t1);
 
 public:
-	HShunck(int vecindad,int step,float landa,cv::Mat* img_t);
+	HShunck(int vecindad,int step,float landa,cv::Mat* img_t,cv::Mat* img_t1);
 	void Calcula_UV(int iteraciones,float margen,cv::Mat* img_t,cv::Mat* img_t1);
 	void pintaVector(cv::Mat* img_a);
 	virtual ~HShunck();

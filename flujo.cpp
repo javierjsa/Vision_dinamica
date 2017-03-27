@@ -53,7 +53,7 @@ int main(int argc, char** argv) {
 
 	if (!outputVideo.isOpened())
 		{
-			cout  << "No se puede salvar vídeo: " << argv[1] << endl;
+			cout  << "No se puede salvar vídeo: " << argv[2] << endl;
 			return -1;
 		}
 

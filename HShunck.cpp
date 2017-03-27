@@ -81,8 +81,8 @@ void HShunck::Calcula_gradiente(cv::Mat* img_t,cv::Mat* img_t1){
 
 		this->It=I2t1-I2t;
 
-		Mat kernelx = (Mat_<float>(1,3)<<-0.5, 0, 0.5);
-		Mat kernely = (Mat_<float>(3,1)<<-0.5, 0, 0.5);
+		Mat kernelx = (Mat_<float>(1,4)<<-0.25,0.25,-0.25,0.25);
+		Mat kernely = (Mat_<float>(4,1)<<-0.25,0.25,-0.25,0.25);
 
 		filter2D(I2t, this->Ix, -1, kernelx);
 		filter2D(I2t, this->Iy, -1, kernely);
@@ -137,6 +137,7 @@ void HShunck::Calcula_UV(int iteraciones,float margen,Mat* img_t,cv::Mat* img_t1
 
 bool HShunck::Aux_UV(float margen,cv::Mat* img_t,cv::Mat* img_t1){
 
+	//Mat kernel = (Mat_<float>(3,3)<<1/12, 1/6, 1/12,1/6,0, 1/6,1/12, 1/6, 1/12);
 
 	this->Uant=this->Uact.clone();
 	this->Vant=this->Vact.clone();
@@ -144,11 +145,15 @@ bool HShunck::Aux_UV(float margen,cv::Mat* img_t,cv::Mat* img_t1){
 	int c=(this->img_t)->cols;
 	int r=(this->img_t)->rows;
 
+	//filter2D(this->Uant, this->Umean, -1, kernel);
+	//filter2D(this->Vant, this->Vmean, -1, kernel);
+
 	//calculo de Umean,Vmean
 	#pragma omp parallel for schedule(static,1)
 	for (int i=this->vecindad;i<=(r-this->vecindad);i=i+this->step){
 		float* _Umean=(this->Umean).ptr<float>(i);
 		float* _Vmean=(this->Vmean).ptr<float>(i);
+
 
 		for (int j=this->vecindad;j<=(c-this->vecindad);j=j+this->step){
 
@@ -161,6 +166,7 @@ bool HShunck::Aux_UV(float margen,cv::Mat* img_t,cv::Mat* img_t1){
 
 					_Umean[j]+=_Uant[swj];
 					_Vmean[j]+=_Vant[swj];
+
 				}
 			}
 			_Umean[j]=_Umean[j]/(this->vecindad*this->vecindad);
@@ -215,7 +221,7 @@ void HShunck::pintaVector(cv::Mat* img_a){
 
 	double minh, maxh;
 	Scalar medsc=mean(this->M);
-	float med=log(medsc.val[0])*log(this->step);
+	//float med=log(medsc.val[0])*log(this->step);
 	cv::minMaxLoc(this->M, &minh, &maxh);
 	//float mlog =log(maxh);
 
@@ -248,7 +254,7 @@ void HShunck::pintaVector(cv::Mat* img_a){
 				int hue=(int)((modulo-minh)*255)/(maxh-minh);
 				//CvPoint p2 = cvPoint(p.x + x2, p.y +y2);
 				float ang= atan((p.y+y2)/(p.x+x2))*180 / CV_PI;
-				int hue2=(int)((ang)*255)/(360);
+				//int hue2=(int)((ang)*255)/(360);
 				//CvPoint dir = cv::Point(p.x+(5* cos(ang)), p.y+(5 * sin(ang))); // calculate direction
 				Point dir;
 				if ((this->step)>4){

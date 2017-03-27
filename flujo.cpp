@@ -105,9 +105,9 @@ int main(int argc, char** argv) {
 	img_c.convertTo(img_c, D_TYPE, 1.f/255);
 	img_d.convertTo(img_d, D_TYPE, 1.f/255);
 
-	//LKanade b = LKanade(win,step,&img_c,&img_d);
+	LKanade b = LKanade(win,step,&img_c,&img_d);
 	//LKanadePinv b = LKanadePinv(win,step,&img_c,&img_d);
-	HShunck b = HShunck(win,step,landa,&img_c, &img_d);
+	//HShunck b = HShunck(win,step,landa,&img_c, &img_d); //Descomentar para HS
 		int frames=0;
 		clock_t begin = clock();
 		while(true){
@@ -117,8 +117,8 @@ int main(int argc, char** argv) {
 			cerr<<".";
 
 
-			b.Calcula_UV(iteraciones,-1,&img_c,&img_d);
-			//b.Calcula_UV(&img_c,&img_d);
+			//b.Calcula_UV(iteraciones,-1,&img_c,&img_d); //Descomentar para HS
+			b.Calcula_UV(&img_c,&img_d);
 
 			b.pintaVector(&img_a);
 			b.pintaVector(&img_b);
@@ -140,7 +140,7 @@ int main(int argc, char** argv) {
 		clock_t end = clock();
 		double segundos = double(end - begin) / CLOCKS_PER_SEC;
 		float fps =frames/segundos;
-		cout<<"Tiempo:"<<segundos<<", Frames:"<<frames<<", FPS:"<<fps;
+		cout<<"\nTiempo:"<<segundos<<", Frames:"<<frames<<", FPS:"<<fps;
 	cout<<"\n";
 	return 0;
 }

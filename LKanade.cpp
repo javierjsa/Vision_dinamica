@@ -160,14 +160,6 @@ void LKanade::pintaVector(cv::Mat* img_a){
 	Scalar medsc=mean(this->M);
 	float med=log(medsc.val[0])*log(this->step);
 	cv::minMaxLoc(this->M, &minh, &maxh);
-	//float mlog =log(maxh);
-
-	//Mat cM,cMU8;
-	//this->M.convertTo(cMU8, CV_8UC1);
-	//applyColorMap(cMU8, cM, COLORMAP_JET);
-
-
-	//float mean= (float)(max+min)/2;
 
 	#pragma omp parallel for schedule(static,1)
 	for (int i=this->vecindad;i<=(r-this->vecindad);i=i+this->step){ //filas, o sea,y
@@ -175,7 +167,6 @@ void LKanade::pintaVector(cv::Mat* img_a){
 		float* _U=this->U.ptr<float>(i);
 		float* _V=this->V.ptr<float>(i);
 		float* _M=this->M.ptr<float>(i);
-		//float* _cM=cM.ptr<float>(i);
 
 		for (int j=this->vecindad;j<=(c-this->vecindad);j=j+this->step){ //columnas, o sea, x
 
@@ -189,10 +180,9 @@ void LKanade::pintaVector(cv::Mat* img_a){
 				float max = (abs(x2) > abs(y2)) ? abs(x2) : abs(y2);
 				float ratio = (this->step)/max;
 				int hue=(int)((modulo-minh)*255)/(maxh-minh);
-				//CvPoint p2 = cvPoint(p.x + x2, p.y +y2);
 				float ang= atan((p.y+y2)/(p.x+x2))*180 / CV_PI;
 				int hue2=(int)((ang)*255)/(360);
-				//CvPoint dir = cv::Point(p.x+(5* cos(ang)), p.y+(5 * sin(ang))); // calculate direction
+
 				Point dir;
 				if ((this->step)>4){
 					dir = Point(p.x+x2*abs(med), p.y+y2*abs(med)); // calculate direction
@@ -201,12 +191,6 @@ void LKanade::pintaVector(cv::Mat* img_a){
 					dir = Point(p.x+x2/log(maxh), p.y+y2/log(maxh));
 					circle(*img_a,p, this->step, CV_RGB(0,hue,0), 1, 8, 0);
 				}
-
-				//if (isnan(ang)){
-				//	continue;
-				//}
-			    //cv::arrowedLine(*img_a, p,dir, , 1,  CV_AA, 0, 0.5);
-
 
 			}
 		}

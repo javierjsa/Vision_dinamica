@@ -41,6 +41,7 @@ public:
 	void GenerarParticulas(Mat& mascara);
 	void SeleccionarParticulas();
 	void PerturbarParticulas();
+	void PintarResultado(Mat& imagen);
 	virtual ~FiltroParticulas();
 };
 

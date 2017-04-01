@@ -86,7 +86,7 @@ int main(int argc, char** argv) {
 		if(fgMaskMOG2.data){
 			a.CalcularPesos(fgMaskMOG2);
 			a.SeleccionarParticulas();
-			a.PerturbarParticulas();
+			a.PerturbarParticulas(fgMaskMOG2);
 		}
 		a.PintarResultado(frame);
 		cvtColor(fgMaskMOG2, mascolor, CV_GRAY2BGR);

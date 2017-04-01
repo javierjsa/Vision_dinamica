@@ -34,13 +34,14 @@ private:
 
 
 	void Reseed();
+	void ReemplazarParticula(Mat& mascara, std::array<float,7> &it);
 
 public:
 	FiltroParticulas(int n_part,Mat& mascara);
 	void CalcularPesos(Mat& mascara);
 	void GenerarParticulas(Mat& mascara);
 	void SeleccionarParticulas();
-	void PerturbarParticulas();
+	void PerturbarParticulas(Mat& mascara);
 	void PintarResultado(Mat& imagen);
 	virtual ~FiltroParticulas();
 };

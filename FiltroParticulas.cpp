@@ -106,6 +106,30 @@ void FiltroParticulas::GenerarParticulas(Mat& mascara){
 
 }
 
+
+void FiltroParticulas::ReemplazarParticula(Mat& mascara, std::array<float,7> &it){
+
+
+	int r= mascara.rows;
+	int c= mascara.cols;
+
+	int w,h,x,y;
+	w =this->uni_w.uniform(1,c/2);
+	h =this->uni_h.uniform(1,r/2);
+	x =this->uni_x.uniform(0,c-w);
+	y =this->uni_y.uniform(0,r-h);
+	it[0]=x;
+	it[1]=y;
+	it[2]=w;
+	it[3]=h;
+	it[4]=0;
+	it[5]=0;
+	it[6]=0;
+
+
+}
+
+
 void FiltroParticulas::CalcularPesos(Mat& mascara){
 	_D cerr<<"\n\nCalcular pesos\n\n";
 	//int tpixels= countNonZero(mascara);
@@ -201,13 +225,14 @@ void FiltroParticulas::SeleccionarParticulas(){
 }
 
 
-void FiltroParticulas::PerturbarParticulas(){
+void FiltroParticulas::PerturbarParticulas(Mat& mascara){
 	_D cout<<"\n\nPerturbar particulas\n\n";
 	this->particulas.clear();
 	this->Reseed();
 
 	for (auto & it: this->particulas_aux) {
 
+		if (!isnan(it[6])){
 		_D cout<<it[0]<<","<<it[1]<<","<<it[2]<<","<<it[3]<<", "<<it[4]<<", "<<it[5]<<", "<<it[6]<<"\n";
 
 		it[0]=it[0]+(float)this->gauss_u.gaussian(this->sigma_x);//X
@@ -220,7 +245,8 @@ void FiltroParticulas::PerturbarParticulas(){
 		//Suma o resta componentes de velocidad
 		it[0]+=it[4];
 		it[1]+=it[5];
-
+		} else
+			this->ReemplazarParticula(mascara,it);
 		//_D cout<<it[0]<<","<<it[1]<<","<<it[2]<<","<<it[3]<<", "<<it[4]<<", "<<it[5]<<", "<<it[6]<<"\n";
 	}
 

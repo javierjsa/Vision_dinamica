@@ -102,7 +102,7 @@ void FiltroParticulas::GenerarParticulas(Mat& mascara){
 
 	//_D namedWindow( "mascara", CV_WINDOW_AUTOSIZE );
 	//_D imshow( "mascara", mascara );
-	//_D waitKey(0);
+	//_D waitKey(1);
 
 }
 
@@ -156,7 +156,9 @@ void FiltroParticulas::CalcularPesos(Mat& mascara){
 		_D cout<<"\n"<<it[6]<<",";
 	}
 	_D cout<<"\n";
-
+	_D namedWindow( "mascara", CV_WINDOW_AUTOSIZE );
+	_D imshow( "mascara", mascara );
+	_D waitKey(1);
 }
 
 
@@ -253,8 +255,8 @@ void FiltroParticulas::PintarResultado(Mat& imagen){
 		if (it[3]<=0)
 			it[3]=2;
 		*/
-
-		rectangle(imagen,Rect((int)it[0],(int)it[1],(int)it[2],(int)it[3]),cvScalar(0,255,0),1,8);
+		if (it[6]>0)
+			rectangle(imagen,Rect((int)it[0],(int)it[1],(int)it[2],(int)it[3]),cvScalar(0,255,0),1,8);
 
 
 	}

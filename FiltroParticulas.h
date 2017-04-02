@@ -35,6 +35,7 @@ private:
 
 	void Reseed();
 	void ReemplazarParticula(Mat& mascara, std::array<float,7> &it);
+	void ComponentesConexas(Mat& imagen, int* res);
 
 public:
 	FiltroParticulas(int n_part,Mat& mascara);

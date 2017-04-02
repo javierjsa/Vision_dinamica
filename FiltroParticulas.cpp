@@ -255,43 +255,63 @@ void FiltroParticulas::PerturbarParticulas(Mat& mascara){
 }
 
 void FiltroParticulas::PintarResultado(Mat& imagen){
+
 	cerr<<"Pintar resultado\n";
-	//int r= imagen.rows;
-	//int c= imagen.cols;
-
+	int r= imagen.rows;
+	int c= imagen.cols;
+	Mat aux = Mat::zeros(r,c,CV_8UC1);
+	int stats[4];
 	for (auto & it: this->particulas_aux) {
-
-		/*
-		if (it[0]<0)
-			it[0]=0;
-		if (it[0]>=c)
-			it[0]=c-2;
-		if (it[1]<0)
-			it[1]=0;
-		if (it[1]>=r)
-			it[1]=r-2;
-
-
-		if (it[2]+it[0]>=c)
-			it[2]=c-(it[0]);
-		if (it[2]<=0)
-			it[2]=2;
-		if (it[3]+it[1]>=c)
-			it[3]=r-(it[1]);
-		if (it[3]<=0)
-			it[3]=2;
-		*/
 		if (it[6]>0)
-			rectangle(imagen,Rect((int)it[0],(int)it[1],(int)it[2],(int)it[3]),cvScalar(0,255,0),1,8);
-
-
+			rectangle(aux,Rect((int)it[0],(int)it[1],(int)it[2],(int)it[3]),cvScalar(255,255,255),-1,8);
 	}
+
+	//namedWindow("componentes", CV_WINDOW_AUTOSIZE );
+	//imshow( "componentes", aux );
+	//waitKey(1);
+
+	this->ComponentesConexas(aux,stats);
+	//cout<<"\ttam:"<<stats[0]<<" left:"<<stats[1]<<" top:"<<stats[2]<<" height:"<<stats[3]<<" width:"<<stats[4]<<"\n";
+	rectangle(imagen,Rect((int)stats[0],(int)stats[1],(int)stats[2],(int)stats[3]),cvScalar(0,255,0),3,8);
 
 	namedWindow("imagen", CV_WINDOW_AUTOSIZE );
 	imshow( "imagen", imagen );
 	waitKey(1);
 
 
+}
+
+void FiltroParticulas::ComponentesConexas(Mat& imagen, int* res){
+
+
+	cv::Mat stats;
+    cv::Mat centroids;
+    cv::Mat labels;
+
+    int la = connectedComponentsWithStats(imagen, labels,stats,centroids, 8, CV_16U);
+    cv::Scalar saux;
+
+   int tam_aux=0,tam,height,width,left,top;
+   int index=0;
+
+    //Se recorren todas las componentes conexas excepto el fondo y se toma la mayor
+    for(int i=1;i<la;i++){
+
+       	int* _a=(stats).ptr<int>(i);
+
+        tam= _a[cv::CC_STAT_AREA];
+        if (tam>tam_aux){
+        	index=i;
+        	tam_aux=tam;
+        	left= _a[cv::CC_STAT_LEFT];
+        	top= _a[cv::CC_STAT_TOP];
+        	height=_a[cv::CC_STAT_HEIGHT];
+        	width=_a[cv::CC_STAT_WIDTH];
+        }
+    }
+
+    //cout<<"index:"<<index<<" tam:"<<tam<<" left:"<<left<<" top:"<<top<<" height:"<<height<<" width:"<<width<<"\n";
+    res[0]=left; res[1]=top;res[2]=width;res[3]=height;
 }
 
 FiltroParticulas::~FiltroParticulas() {

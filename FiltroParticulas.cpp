@@ -259,10 +259,11 @@ void FiltroParticulas::PintarResultado(Mat& imagen){
 	cerr<<"Pintar resultado\n";
 	int r= imagen.rows;
 	int c= imagen.cols;
+	float ub,vb,wb=0;
 	Mat aux = Mat::zeros(r,c,CV_8UC1);
 	int stats[4];
 	for (auto & it: this->particulas_aux) {
-		if (it[6]>0)
+		if (it[6]>0.2)
 			rectangle(aux,Rect((int)it[0],(int)it[1],(int)it[2],(int)it[3]),cvScalar(255,255,255),-1,8);
 	}
 
@@ -273,7 +274,12 @@ void FiltroParticulas::PintarResultado(Mat& imagen){
 	this->ComponentesConexas(aux,stats);
 	//cout<<"\ttam:"<<stats[0]<<" left:"<<stats[1]<<" top:"<<stats[2]<<" height:"<<stats[3]<<" width:"<<stats[4]<<"\n";
 	rectangle(imagen,Rect((int)stats[0],(int)stats[1],(int)stats[2],(int)stats[3]),cvScalar(0,255,0),3,8);
-
+	if (it[6]>wb){
+		wb=it[6]
+		ub=it[4];
+		vb=it[5];
+	}
+	//Pintar arrowedline
 	namedWindow("imagen", CV_WINDOW_AUTOSIZE );
 	imshow( "imagen", imagen );
 	waitKey(1);

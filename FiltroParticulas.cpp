@@ -263,20 +263,19 @@ void FiltroParticulas::PintarResultado(Mat& imagen){
 	int stats[4];
 	float u=0;
 	float v=0;
-	float score=0;
+	float mean=1;
 	for (auto & it: this->particulas_aux) {
-		if (it[6]>0)
+		if (it[6]>0){
 			rectangle(aux,Rect((int)it[0],(int)it[1],(int)it[2],(int)it[3]),cvScalar(255,255,255),-1,8);
-		if (it[6]>score){
-			u=it[4];
-			v=it[5];
-			score=it[6];
-				//mean++;
+			u+=it[4]*it[6];
+			v+=it[5]*it[6];
+			mean++;
 		}
 	}
 
-	//u=u/mean;
-	//v=v/mean;
+
+	u=u/mean;
+	v=v/mean;
 
 	//namedWindow("componentes", CV_WINDOW_AUTOSIZE );
 	//imshow( "componentes", aux );
@@ -288,7 +287,7 @@ void FiltroParticulas::PintarResultado(Mat& imagen){
 	float y=float(stats[1])+float(stats[3]/2);
 
 	CvPoint p = cvPoint(x,y);
-	CvPoint dir = cvPoint(x+(u*10),y+(v*10));
+	CvPoint dir = cvPoint(x+(u*100),y+(v*100));
 
 	rectangle(imagen,Rect((int)stats[0],(int)stats[1],(int)stats[2],(int)stats[3]),cvScalar(0,255,0),3,8);
 	arrowedLine(imagen, p,dir, CV_RGB(255,0,0), 2,  CV_AA, 0, 0.5);

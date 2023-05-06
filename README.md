@@ -4,6 +4,8 @@ Prácticas de sustracción de fondo (Python), filtro de partículas (C++) y fluj
 ## #
 ## Flujo óptico. Lukas Kanade # 
 
+{% include youtube.html id="AcsS-KDcj8Y" %}
+
 <br>[![Flujo óptico](https://img.youtube.com/vi/AcsS-KDcj8Y/0.jpg)](https://www.youtube.com/watch?v=AcsS-KDcj8Y&index=3&list=PLSoTobH9vMHRgHuK5jKE9Chk7-Rhcr4L4 "Flujo óptico")
 <br><br>
 ## #
